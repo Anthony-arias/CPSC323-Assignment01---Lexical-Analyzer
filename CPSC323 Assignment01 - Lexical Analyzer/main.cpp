@@ -6,6 +6,8 @@
 
 using namespace std;
 
+// Tim's new changes
+
 // Don't need to change this table 
 vector<vector<int>> dfsm_table = {
     //   L  D  _  .
