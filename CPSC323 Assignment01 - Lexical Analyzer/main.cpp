@@ -23,7 +23,7 @@ vector<int> accepting_states = { 1, 2, 5, 6, 7 };
 
 vector<string> keywords = { "function", "int", "bool", "real","if", "fi", "else", "return", "put", "get", "while","endwhile", "true", "false" };
 
-vector<string> ops = { "==", "!=", ">", "<", "<=", "=>", "+", "-", "*", "/", "="};
+vector<string> ops = { "==", "!=", ">", "<", "<=", "=>", "+", "-", "*", "/", "=" };
 
 vector<char> seps = { '#', '(', ')',',','{','}',';' };
 
@@ -70,7 +70,7 @@ void writeTokensToFile(const vector<Token>& tokens, const string& fileName) {
     for (const auto& token : tokens) {
         outputFile << setw(20) << left << token.type << setw(20) << left << token.value << endl;
     }
-    
+
     // Close file so no memory leaks
     outputFile.close();
 }
@@ -88,7 +88,7 @@ bool checkIfSep(char c)
 }
 
 // Checks to see if char is an OPERATOR 
-// TODO: MAY NEED WORK ( fahr -32 ) doesnt work because of the no space on '-'
+// TODO: MAY NEED WORK ( fahr -32 ) doesnt work because of the no space on '-' // This is fixed
 string checkIfOp(string input, int& i, bool& isOp) {
     string op = "";
     char c = input[i];
@@ -97,9 +97,10 @@ string checkIfOp(string input, int& i, bool& isOp) {
     if (i < input.length() - 1) {
         char next = input[i + 1];
         op = string(1, c) + next;
+        //if (i == 4) cout << op << endl;
         if (find(ops.begin(), ops.end(), op) != ops.end()) {
             isOp = true;
-            i += 2;  // Skip past the second character
+            i++;  // Skip past the second character
             return op;
         }
     }
@@ -108,7 +109,6 @@ string checkIfOp(string input, int& i, bool& isOp) {
     op = string(1, c);
     if (find(ops.begin(), ops.end(), op) != ops.end()) {
         isOp = true;
-        i++;  // Skip past the current character
         return op;
     }
 
@@ -250,7 +250,7 @@ vector<Token> lexer(string input) {
             }
             // If its none of those it may be a op or sep
             else {
-                
+
                 // Check if its a separtor
                 if (isSep || isOp)
                 {
@@ -285,13 +285,13 @@ vector<Token> lexer(string input) {
 
                 }
                 else {
-                    
-                        // Invalid input, return an error token
-                        cout << endl << lexeme << endl << c << endl << static_cast<int>(c) << endl;
-                        token.type = "ERROR";
-                        token.value = "Invalid input";
-                        tokens.push_back(token);
-                    
+
+                    // Invalid input, return an error token
+                    cout << endl << lexeme << endl << c << endl << static_cast<int>(c) << endl;
+                    token.type = "ERROR";
+                    token.value = "Invalid input";
+                    tokens.push_back(token);
+
 
                 }
 
@@ -337,21 +337,20 @@ vector<Token> lexer(string input) {
 
 
 int main(int argc, char* argv[]) {
-
-    // Makes sure the user sends an input_file and has an output_file to write the results to
-    if (argc != 3) {
-        cerr << "Usage: " << argv[0] << " input_file output_file" << endl;
-        exit(1);
-    }
+    string userInput = "";
+    cout << "Enter a .txt file name without extension: " << endl;
+    cin >> userInput;
+    cin.ignore(999, '\n');
 
     // Read the entire input_file to the string buffer input
-    string input = readFile(argv[1]);
+    string input = readFile(userInput + ".txt");
 
     // Add all the tokens the lexer function returns from reading the entire input file
     vector<Token> tokens = lexer(input);
 
     // Write the entire vector of tokens to the specified output file. (argv[2])
-    writeTokensToFile(tokens, argv[2]);
+    writeTokensToFile(tokens, userInput + "Output.txt");
+    cout << "Output written to: " << userInput + "Output.txt" << endl;
 
     return 0;
 }
