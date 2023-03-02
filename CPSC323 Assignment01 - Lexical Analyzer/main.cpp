@@ -40,7 +40,9 @@ string readFile(const string& fileName) {
 
     // Test to see if it can open file
     if (!inputFile.is_open()) {
-        cerr << "Error opening input file " << fileName << endl;
+        cerr << "Error opening input file, file does not exist: " << fileName << endl;
+        cout << "Press Enter to terminate program" << endl;
+        cin.ignore(999, '\n');
         exit(1);
     }
 
@@ -351,6 +353,9 @@ int main(int argc, char* argv[]) {
     // Write the entire vector of tokens to the specified output file. (argv[2])
     writeTokensToFile(tokens, userInput + "Output.txt");
     cout << "Output written to: " << userInput + "Output.txt" << endl;
+
+    cout << "Press Enter to terminate program" << endl;
+    cin.ignore(999, '\n');
 
     return 0;
 }
