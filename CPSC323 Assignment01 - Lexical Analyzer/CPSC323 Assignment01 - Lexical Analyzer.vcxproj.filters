@@ -15,13 +15,30 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\Downloads\main.cpp">
+    <Text Include="output.txt" />
+    <Text Include="Sample.txt" />
+    <Text Include="Text.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\source\repos\CPSC323-Assignment01---Lexical-Analyzer\LexerAnalyzer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\repos\CPSC323-Assignment01---Lexical-Analyzer\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\source\repos\CPSC323-Assignment01---Lexical-Analyzer\SyntaxAnalyzer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="output.txt" />
-    <Text Include="Sample.txt" />
-    <Text Include="Text.txt" />
+    <ClInclude Include="..\..\..\..\source\repos\CPSC323-Assignment01---Lexical-Analyzer\Global_Includes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\repos\CPSC323-Assignment01---Lexical-Analyzer\LexerAnalyzer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\source\repos\CPSC323-Assignment01---Lexical-Analyzer\SyntaxAnalyzer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
