@@ -42,8 +42,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -144,14 +144,14 @@
     <Text Include="Text.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\source\repos\CPSC323-Assignment01---Lexical-Analyzer\LexerAnalyzer.cpp" />
-    <ClCompile Include="..\..\..\..\source\repos\CPSC323-Assignment01---Lexical-Analyzer\main.cpp" />
-    <ClCompile Include="..\..\..\..\source\repos\CPSC323-Assignment01---Lexical-Analyzer\SyntaxAnalyzer.cpp" />
+    <ClCompile Include="LexerAnalyzer.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="SyntaxAnalyzer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\source\repos\CPSC323-Assignment01---Lexical-Analyzer\Global_Includes.h" />
-    <ClInclude Include="..\..\..\..\source\repos\CPSC323-Assignment01---Lexical-Analyzer\LexerAnalyzer.h" />
-    <ClInclude Include="..\..\..\..\source\repos\CPSC323-Assignment01---Lexical-Analyzer\SyntaxAnalyzer.h" />
+    <ClInclude Include="Global_Includes.h" />
+    <ClInclude Include="LexerAnalyzer.h" />
+    <ClInclude Include="SyntaxAnalyzer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
