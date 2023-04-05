@@ -84,3 +84,45 @@ bool SyntaxAnalyzer::functionDefinitionsPrime()
 {
 	return false;
 }
+
+
+//Rule 13-24
+bool SyntaxAnalyzer::declarationList()
+{
+	//Goes to declaration then declarationrListPrime
+	declaration();
+	declarationListPrime();
+}
+
+
+bool SyntaxAnalyzer::declarationListPrime()
+{
+	//if statement to check whether epsilon or functions.
+	//if token is == to declaration go back in?
+	//else epsilon
+	if (syntaxTokens[current_token_index].value == "....")
+	{
+		declaration();
+		declarationListPrime();
+	}
+	else
+		return true; // epsilon
+}
+
+bool SyntaxAnalyzer::declaration()
+{
+	qualifier();
+	ids();
+}
+
+//Calls identifier
+bool SyntaxAnalyzer::ids()
+{
+	// call identifier/keywords from assignment 1
+	idsPrime();
+}
+bool SyntaxAnalyzer::idsPrime()
+{
+	//if identifier || idsprime
+	//else return something (epsilon)
+}

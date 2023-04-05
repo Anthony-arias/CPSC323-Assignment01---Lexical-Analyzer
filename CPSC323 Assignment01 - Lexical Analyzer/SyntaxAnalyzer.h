@@ -16,6 +16,14 @@ public:
     bool functionDefinitions();
     bool function();
     bool functionDefinitionsPrime();
+    bool qualifier();
+
+    //Rule 13-24
+    bool declarationList();
+    bool declarationListPrime();
+    bool declaration();
+    bool ids();
+    bool idsPrime();
 
 private:
     LexerAnalyzer lexer;
