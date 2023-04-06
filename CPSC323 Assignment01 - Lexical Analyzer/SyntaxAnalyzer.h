@@ -17,6 +17,8 @@ public:
     bool function();
     bool functionDefinitionsPrime();
 
+    //abcd
+
 private:
     LexerAnalyzer lexer;
     int current_token_index;
