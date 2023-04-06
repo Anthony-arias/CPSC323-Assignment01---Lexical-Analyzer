@@ -182,11 +182,13 @@ bool SyntaxAnalyzer::parameterList()
 		else
 		{
 			//error parameterListPrime expected
+			return false;
 		}
 	}
 	else
 	{
 		//error parameter expected
+		return false;
 	}
 }
 
@@ -205,11 +207,13 @@ bool SyntaxAnalyzer::parameterListPrime()
 			else
 			{
 				//expected parameterlist
+				return false;
 			}
 		}
 		else
 		{
 			//expected paramter
+			return false;
 		}
 	}
 
@@ -226,6 +230,13 @@ bool SyntaxAnalyzer::parameter()
 			return true;
 		}
 	}
+	else
+	{
+		return false;
+	}
+
+	return false;
+
 }
 
 // R10. <Qualifier> ::= int | bool | real
@@ -270,18 +281,21 @@ bool SyntaxAnalyzer::body()
 			{
 				cout << "Error: Expected }. Found: "
 					<< syntaxTokens[current_token_index].value << endl;
+				return false;
 			}
 		}
 		else
 		{
 			cout << "Error: Expected statement list. Found: "
 				<< syntaxTokens[current_token_index].value << endl;
+			return false;
 		}
 	}
 	else
 	{
 		cout << "Error: Expected {. Found: "
 			<< syntaxTokens[current_token_index].value << endl;
+		return false;
 	}
 }
 
@@ -296,22 +310,23 @@ bool SyntaxAnalyzer::optDeclarationList()
 	return true;
 }
 
+
 bool SyntaxAnalyzer::ids()
 {
-
+	return false;
 }
 
 bool SyntaxAnalyzer::declarationList()
 {
-
+	return false;
 }
 
 bool SyntaxAnalyzer::statementList()
 {
-
+	return false;
 }
 
 bool SyntaxAnalyzer::identifier()
 {
-
+	return false;
 }
