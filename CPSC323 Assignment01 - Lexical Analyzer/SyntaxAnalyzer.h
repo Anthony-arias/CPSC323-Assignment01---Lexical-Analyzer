@@ -7,31 +7,29 @@ public:
     vector<Token> syntaxTokens;
 
     // Rule 1
-    bool rat23S();
+    void rat23S();
     // Rule 2
-    bool optFunctionDefinitions();
-    bool optDeclarationList();
-    bool statementList();
+    void optFunctionDefinitions();
+    void optDeclarationList();
+    void statementList();
     // Rule 3 & 4
-    bool functionDefinitions();
-    bool function();
-    bool functionDefinitionsPrime();
+    void functionDefinitions();
+    void function();
+    void functionDefinitionsPrime();
     // Rule 5
-    bool identifier();
-    bool optParameterList();
-    bool body();
+    void identifier();
+    void optParameterList();
+    void body();
     // Rule 6
-    bool parameterList();
+    void parameterList();
     // Rule 7
-    bool parameter();
-    bool parameterListPrime();
+    void parameter();
+    void parameterListPrime();
     // Rule 9
-    bool ids();
-    bool qualifier();
+    void ids();
+    void qualifier();
     // Rule 12
-    bool declarationList();
-
-    //abcd
+    void declarationList();
 
 private:
 
