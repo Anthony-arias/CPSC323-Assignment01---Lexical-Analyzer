@@ -212,194 +212,143 @@ void SyntaxAnalyzer::optDeclarationList()
 
 
 //<DeclarationList::= <Declaration>; <DeclarationList'>
-bool SyntaxAnalyzer::declarationList()
+void SyntaxAnalyzer::declarationList()
 {
-	if (declaration())
+	declaration();
+	if (syntaxTokens[current_token_index].value == ";")
 	{
-		if (syntaxTokens[current_token_index].value == ";")
-		{
-			current_token_index++;
-			if (declarationListPrime())
-				return true;
-			else
-				return false;
-		}
+		current_token_index++;
+		declarationListPrime();
 	}
 	else
-		return false;
-
-}
-
-bool SyntaxAnalyzer::identifier()
-{
-	return false;
-}
-
-
-bool SyntaxAnalyzer::declarationListPrime()
-{
-	//if statement to check whether epsilon or functions.
-	//if token is == to declaration go back in?
-	//else epsilon
-
-	if (declaration())
 	{
-		if (syntaxTokens[current_token_index].value == ";")
-		{
-			current_token_index++;
-			if (declarationListPrime())
-				return true;
-			else
-				return false;
-		}
-		else
-			return false;
+		cout << "Error: Expected ';'. Found: "
+			<< syntaxTokens[current_token_index].value << endl;
+	}
+}
+
+void SyntaxAnalyzer::declarationListPrime()
+{
+	declaration();
+	if (syntaxTokens[current_token_index].value == ";")
+	{
+		current_token_index++;
+		declarationListPrime();
 	}
 	else
-		return false;
-}
-
-bool SyntaxAnalyzer::declaration()
-{
-	if (qualifier())
-		if (ids())
-			return true;
-		else return false;
-	else
-		return false;
-}
-
-bool SyntaxAnalyzer::ids()
-{
-	if (identifier())
 	{
-		if (idsPrime())
-			return true;
-		else
-			return false;
+		cout << "Error: Expected ';'. Found: "
+			<< syntaxTokens[current_token_index].value << endl;
 	}
-	else
-		return false;
 }
-bool SyntaxAnalyzer::idsPrime()
+
+void SyntaxAnalyzer::declaration()
+{
+	qualifier();
+	ids();
+}
+
+void SyntaxAnalyzer::ids()
+{
+	if (syntaxTokens[current_token_index].type == "IDENTIFIER")
+	{
+		current_token_index++;
+		idsPrime();
+	}
+}
+
+void SyntaxAnalyzer::idsPrime()
 {
 	if (syntaxTokens[current_token_index].value == ",")
 	{
-		if (identifier())
+		if (syntaxTokens[current_token_index].type == "IDENTIFIER")
 		{
-			if (idsPrime())
-				return true;
-			else
-				return false;
+			current_token_index++;
+			idsPrime();
 		}
-		else
-			return false;
-
-		return false;
 	}
 	else
-		return false;
+		cout << "Error: Expected ','. Found: "
+		<< syntaxTokens[current_token_index].value << endl;
 }
 
-
-bool SyntaxAnalyzer::statementList()
+void SyntaxAnalyzer::statementList()
 {
-	if (statement())
-	{
-		if (statementListPrime())
-			return true;
-		else
-			return false;
-	}
-	else
-		return false;
+	statement();
+	statementListPrime();
 }
 
-bool SyntaxAnalyzer::statementListPrime()
+void SyntaxAnalyzer::statementListPrime()
 {
-	if (statement())
-	{
-		if (statementListPrime())
-			return true;
-		else
-			return false;
-	}
-	else
-		return false;
+	statement();
+	statementListPrime();
 }
 //<Statement> :: = <Compound> | <Assign> | <If> | <Return> | <Print> | <Scan> | <While>
-bool SyntaxAnalyzer::statement()
+void SyntaxAnalyzer::statement()
 {
-	if (compound())
-		return true;
-	if (assign())
-		return true;
-	if (ifFunction())
-		return true;
-	if (returnFunction())
-		return true;
-	if (print())
-		return true;
-	if (scan())
-		return true;
-	if (whileFunction());
-		return true;
+	compound();
+	assign();
+	ifFunction();
+	returnRule();
+	print();
+	scan();
+	whileRule();
 }
 
-bool SyntaxAnalyzer::compound()
+void SyntaxAnalyzer::compound()
 {
-
 	if (syntaxTokens[current_token_index].value == "{")
 	{
 		current_token_index++;
-		if (statementList())
-		{
-			if (syntaxTokens[current_token_index].value == "}")
-				return true;
-			else
-			{
-				cout << "Error: Expected '}'."
-					<< syntaxTokens[current_token_index].value << endl;
-				return false;
-			}
-		}
+		statementList();;
+		if (syntaxTokens[current_token_index].value == "}")
+			current_token_index++;
 		else
-			return false;
+			{
+				cout << "Error: Expected '}'. Found: "
+					<< syntaxTokens[current_token_index].value << endl;
+			}
 	}
 	else
 	{
-		cout << "Error: Expected '{'."
+		cout << "Error: Expected '{'. Found: "
 			<< syntaxTokens[current_token_index].value << endl;
-		return false;
 	}
 }
 
-bool SyntaxAnalyzer::assign()
+void SyntaxAnalyzer::assign()
 {
-	if (identifier())
+	if (syntaxTokens[current_token_index].type == "IDENTIFIER")
 	{
+		current_token_index++;
 		if (syntaxTokens[current_token_index].value == "=")
 		{
 			current_token_index++;
-			if (expression())
-				return true;
+			expression();
+			if (syntaxTokens[current_token_index].value == ";")
+				current_token_index++;
 			else
-				return false;
+			{
+				cout << "Error: Expected ';'. Found: "
+					<< syntaxTokens[current_token_index].value << endl;
+			}
 		}
 		else
 		{
-			cout << "Error: Expected '='."
+			cout << "Error: Expected '='. Found: "
 				<< syntaxTokens[current_token_index].value << endl;
-			return false;
 		}
 	}
 	else
-		return false;
+	{
+		cout << "Error: Expected an Identifier. Found: "
+			<< syntaxTokens[current_token_index].value << endl;
+	}
 }
 
 
 //THIS NEEDS FIXING
-bool SyntaxAnalyzer::ifFunction()
+void SyntaxAnalyzer::ifFunction()
 {
 	if (syntaxTokens[current_token_index].value == "if")
 	{
@@ -407,78 +356,54 @@ bool SyntaxAnalyzer::ifFunction()
 		if (syntaxTokens[current_token_index].value == "(")
 		{
 			current_token_index++;
-			if (condition())
+			condition();
+			if (syntaxTokens[current_token_index].value == ")")
 			{
-				if (syntaxTokens[current_token_index].value == ")")
-				{
-					current_token_index++;
-					if (statement())
-					{
-						if (ifFunctionPrime())
-							return true;
-						else
-							return false;
-					}
-					else
-						return false;
-				}
-				else
-				{
-					cout << "Error: Expected ')'."
-						<< syntaxTokens[current_token_index].value << endl;
-					return false;
-				}
+				current_token_index++;
+				statement();
 			}
 			else
-				return false;
+			{
+				cout << "Error: Expected ')'. Found: "
+					<< syntaxTokens[current_token_index].value << endl;
+			}
 		}
 		else
 		{
-			cout << "Error: Expected '('."
+			cout << "Error: Expected '('. Found: "
 				<< syntaxTokens[current_token_index].value << endl;
-			return false;
 		}
 	}
 	else
 	{
-		cout << "Error: Expected 'if'."
+		cout << "Error: Expected 'if'. Found: "
 			<< syntaxTokens[current_token_index].value << endl;
-		return false;
 	}
 }
-bool SyntaxAnalyzer::ifFunctionPrime()
+void SyntaxAnalyzer::ifFunctionPrime()
 {
 	if (syntaxTokens[current_token_index].value == "fi")
+		current_token_index++;
+
+	else if (syntaxTokens[current_token_index].value == "else")
 	{
 		current_token_index++;
-		return true;
-	}
-	if (syntaxTokens[current_token_index].value == "else")
-	{
-		current_token_index++;
-		if (statement())
-		{
+		statement();
 			if (syntaxTokens[current_token_index].value == "fi")
-			{
 				current_token_index++;
-				return true;
-			}
 			else
-				return false;
-		}
+			{
+				cout << "Error: Expected 'fi'. Found: "
+					<< syntaxTokens[current_token_index].value << endl;
+			}
 	}
 	else
 	{
-		cout << "Error: Expected 'fi'."
+		cout << "Error: Expected 'else'. Found: "
 			<< syntaxTokens[current_token_index].value << endl;
-		return false;
 	}
 }
 
-bool SyntaxAnalyzer::functionDefinitionsPrime()
-{
-	return false;
-}
 
 void SyntaxAnalyzer::returnRule()
 {
@@ -495,7 +420,7 @@ void SyntaxAnalyzer::returnRulePrime()
 		expression();
 		if (syntaxTokens[current_token_index].value == ";")
 		{
-			outputTokenAndValue();
+			outputTokenValueAndIterate();
 			current_token_index++;
 		}
 		else throwError();

@@ -36,39 +36,19 @@ public:
     void declarationList();
 
     //Rule 12-17
-    bool declarationListPrime();
-    bool declaration();
-    bool idsPrime();
+    void declarationListPrime();
+    void declaration();
+    void idsPrime();
 
     //Rule 18 <Statement  List>::= <Statement><Statement List'>
-    bool statementListPrime();
-    bool statement();
+    void statementListPrime();
+    void statement();
 
     //Rule 20 <Statement> ::= <Compound> | <Assign> | <If> | <Return> | <Print> | <Scan> | <While>
-    bool compound();
-    bool assign();
-    bool ifFunction();
-    bool ifFunctionPrime();
-    bool returnFunction();
-    bool print();
-    bool scan();
-    bool whileFunction();
-    bool expression();
-
-    //Rule 30
-    bool condition();
-
-
-
-
-
-
-
-
-
-
-
-
+    void compound();
+    void assign();
+    void ifFunction();
+    void ifFunctionPrime();
 
     // Rule 25 - 37
     void returnRule();
