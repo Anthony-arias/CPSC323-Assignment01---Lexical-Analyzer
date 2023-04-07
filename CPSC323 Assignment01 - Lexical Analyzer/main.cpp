@@ -64,6 +64,7 @@ int main(int argc, char* argv[]) {
 
     // Add all the tokens the lexer function returns from reading the entire input file
     vector<Token> tokens = lexerAnalyzer.lexer(input);
+    // Copy entire tokens vector to syntaxTokens
     syntaxAnalyzer.syntaxTokens = tokens;
 
     // Write the entire vector of tokens to the specified output file. (argv[2])
