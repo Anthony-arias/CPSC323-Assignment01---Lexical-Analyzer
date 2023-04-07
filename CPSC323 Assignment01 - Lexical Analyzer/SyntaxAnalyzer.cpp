@@ -1,313 +1,198 @@
 
 #include "SyntaxAnalyzer.h"
 // R1. <Rat23S> ::= <Opt Function Definitions> # <Opt Declaration List> # <Statement List>
-bool SyntaxAnalyzer::rat23S()
+void SyntaxAnalyzer::rat23S()
 {
 	optFunctionDefinitions();
 	if (syntaxTokens[current_token_index].value == "#")
 	{
+		current_token_index++;
 		optDeclarationList();
 		if (syntaxTokens[current_token_index].value == "#")
 		{
+			current_token_index++;
 			statementList();
-			return true;
+			return;
 		}
 		else
 		{
 			cout << "Error: Expected '#' after declaration list. Found: "
 				<< syntaxTokens[current_token_index].value << endl;
-			return false;
+			return;
 		}
 	}
 	else
 	{
 		cout << "Error: Expected '#' after function definitions. Found: "
 			<< syntaxTokens[current_token_index].value << endl;
-		return false;
+		return;
 	}
 
-	return true;
+	return;
 }
 
 // R2. <Opt Function Definitions> :: = <Function Definitions> | <Empty>
-bool SyntaxAnalyzer::optFunctionDefinitions()
+void SyntaxAnalyzer::optFunctionDefinitions()
 {
-	// Try to match <Function Definitions>
-	if (functionDefinitions()) {
-		return true;
-	}
+	functionDefinitions();
 
-	// Otherwise, match <Empty>
-	return true;
+	// Otherwise, <Empty>
+	return;
 }
 
 // R3. <Function Definitions> :: = <Function> < Function Definitions'>
-bool SyntaxAnalyzer::functionDefinitions()
+void SyntaxAnalyzer::functionDefinitions()
 {
-	if (function())
-	{
-		if (functionDefinitionsPrime())
-		{
-			return true;
-		}
-		else
-		{
-			cout << "Error: Expected another function definition after the current one. Found: "
-				<< syntaxTokens[current_token_index].value << endl;
-			return false;
-		}
-	}
-	else
-	{
-		cout << "Error: Expected a function definition. Found: "
-			<< syntaxTokens[current_token_index].value << endl;
-		return false;
-	}
-
+	function();
+	functionDefinitionsPrime();
 }
 
 //R4. <Function Definitions'> ::= empty | <Function> <Function Definitions'>
-bool SyntaxAnalyzer::functionDefinitionsPrime()
+void SyntaxAnalyzer::functionDefinitionsPrime()
 {
-	if (function())
-	{
-		if (functionDefinitionsPrime())
-		{
-			return true;
-		}
-		else
-		{
-			cout << "Error: Expected another function definition after the current one. Found: "
-				<< syntaxTokens[current_token_index].value << endl;
-			return false;
-		}
-	}
-	else
-	{
-		cout << "Error: Expected a function definition. Found: "
-			<< syntaxTokens[current_token_index].value << endl;
-		return false;
-	}
+	function();
+	functionDefinitionsPrime();
 
-	return true;
+	// Otherwise Empty
+	return;
 }
 
 //R5. <Function> :: = function <Identifier>(<Opt Parameter List>) < Opt Declaration List > <Body>
-bool SyntaxAnalyzer::function()
+void SyntaxAnalyzer::function()
 {
 	if (syntaxTokens[current_token_index].value == "function")
 	{
 		current_token_index++;
-		if (identifier())
+		identifier();
+		if (syntaxTokens[current_token_index].value == "(")
 		{
-			if (syntaxTokens[current_token_index].value == "(")
+			current_token_index++;
+			optParameterList();
+			if (syntaxTokens[current_token_index].value == ")")
 			{
 				current_token_index++;
-				if (optParameterList())
-				{
-					if (syntaxTokens[current_token_index].value == ")")
-					{
-						current_token_index++;
-						if (optDeclarationList())
-						{
-							if (body())
-							{
-								return true;
-							}
-							else
-							{
-								cout << "Error: Expected body of function. Found: "
-									<< syntaxTokens[current_token_index].value << endl;
-							}
-						}
-						else
-						{
-							cout << "Error: Expected optional declaration list. Found: "
-								<< syntaxTokens[current_token_index].value << endl;
-						}
-					}
-					else
-					{
-						cout << "Error: Expected ')' after parameter list. Found: "
-							<< syntaxTokens[current_token_index].value << endl;
-					}
-				}
-				else
-				{
-					cout << "Error: Expected optional parameter list. Found: "
-						<< syntaxTokens[current_token_index].value << endl;
-				}
+				optDeclarationList();
+				body();
 			}
 			else
 			{
-				cout << "Error: Expected '(' after function identifier. Found: "
+				cout << "Error: Expected ')' after opt parameter list. Found: "
 					<< syntaxTokens[current_token_index].value << endl;
+				return;
 			}
 		}
 		else
 		{
-			cout << "Error: Expected function identifier. Found: "
+			cout << "Error: Expected '(' after identifier. Found: "
 				<< syntaxTokens[current_token_index].value << endl;
+			return;
 		}
 	}
 	else
 	{
 		cout << "Error: Expected 'function' keyword. Found: "
 			<< syntaxTokens[current_token_index].value << endl;
+		return;
 	}
-
-	return false;
 }
 
 //R6. <Opt Parameter List> :: = <Parameter List> | <Empty>
-bool SyntaxAnalyzer::optParameterList()
+void SyntaxAnalyzer::optParameterList()
 {
-	if (parameterList())
-	{
-		return true;
-	}
+	parameterList();
 
-	return true;
+	// Otherwise empty
+	return;
 }
 
 //R7. <Parameter List> :: = <Parameter> < Parameter List'>
-bool SyntaxAnalyzer::parameterList()
+void SyntaxAnalyzer::parameterList()
 {
-	if (parameter())
-	{
-		if (parameterListPrime())
-		{
-			return true;
-		}
-		else
-		{
-			//error parameterListPrime expected
-			return false;
-		}
-	}
-	else
-	{
-		//error parameter expected
-		return false;
-	}
+	parameter();
+	parameterListPrime();
 }
 
 //R8. <Parameter List'> ::= empty | , <Parameter> <Parameter List'>
-bool SyntaxAnalyzer::parameterListPrime()
+void SyntaxAnalyzer::parameterListPrime()
 {
 	if (syntaxTokens[current_token_index].value == ",")
 	{
 		current_token_index++;
-		if (parameter())
-		{
-			if (parameterListPrime())
-			{
-				return true;
-			}
-			else
-			{
-				//expected parameterlist
-				return false;
-			}
-		}
-		else
-		{
-			//expected paramter
-			return false;
-		}
+		parameter();
+		parameterListPrime();
 	}
 
-	return true;
+	// Otherwise empty
+	return;
 }
 
 //R9. <Parameter> ::= <IDs > <Qualifier>
-bool SyntaxAnalyzer::parameter()
+void SyntaxAnalyzer::parameter()
 {
-	if (ids())
-	{
-		if (qualifier())
-		{
-			return true;
-		}
-	}
-	else
-	{
-		return false;
-	}
-
-	return false;
-
+	ids();
+	qualifier();
 }
 
 // R10. <Qualifier> ::= int | bool | real
-bool SyntaxAnalyzer::qualifier()
+void SyntaxAnalyzer::qualifier()
 {
 	if (syntaxTokens[current_token_index].value == "int")
 	{
 		current_token_index++;
-		return true;
+		return;
 	}
 
 	if (syntaxTokens[current_token_index].value == "bool")
 	{
 		current_token_index++;
-		return true;
+		return;
 	}
 
 	if (syntaxTokens[current_token_index].value == "real")
 	{
 		current_token_index++;
-		return true;
+		return;
 	}
 
-	cout << "Error: Expected qualifier int, bool, real. Found: "
+	cout << "Error: Expected qualifier to be 'int, bool, real'. Found: "
 		<< syntaxTokens[current_token_index].value << endl;
-	return false;
+	return;
 }
 
 //R11. <Body> ::= { < Statement List> }
-bool SyntaxAnalyzer::body()
+void SyntaxAnalyzer::body()
 {
 	if (syntaxTokens[current_token_index].value == "{")
 	{
 		current_token_index++;
-		if (statementList())
+		statementList();
+		if (syntaxTokens[current_token_index].value == "}")
 		{
-			if (syntaxTokens[current_token_index].value == "}")
-			{
-				current_token_index++;
-			}
-			else
-			{
-				cout << "Error: Expected }. Found: "
-					<< syntaxTokens[current_token_index].value << endl;
-				return false;
-			}
+			return;
 		}
 		else
 		{
-			cout << "Error: Expected statement list. Found: "
+			cout << "Error: Expected } after statement list. Found: "
 				<< syntaxTokens[current_token_index].value << endl;
-			return false;
+			return;
 		}
+
 	}
 	else
 	{
-		cout << "Error: Expected {. Found: "
+		cout << "Error: Expected { before statement list. Found: "
 			<< syntaxTokens[current_token_index].value << endl;
-		return false;
+		return;
 	}
 }
 
 //R12. <Opt Declaration List> ::= <Declaration List> | <Empty>
-bool SyntaxAnalyzer::optDeclarationList()
+void SyntaxAnalyzer::optDeclarationList()
 {
-	if (declarationList())
-	{
-		return true;
-	}
+	declarationList();
 
-	return true;
+	// Otherwise empty
+	return;
 }
 
 
