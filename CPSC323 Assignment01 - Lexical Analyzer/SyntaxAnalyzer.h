@@ -1,4 +1,3 @@
-
 #pragma once
 #include "LexerAnalyzer.h"
 
@@ -13,6 +12,7 @@ public:
     bool optFunctionDefinitions();
     bool optDeclarationList();
     bool statementList();
+    // Rule 3 & 4
     bool functionDefinitions();
     bool function();
     bool functionDefinitionsPrime();
@@ -26,7 +26,10 @@ public:
     bool idsPrime();
 
 private:
+
+    // Debug terminal hardcoded ON to output parse tree
+    bool terminal = true;
+
     LexerAnalyzer lexer;
     int current_token_index;
 };
-
