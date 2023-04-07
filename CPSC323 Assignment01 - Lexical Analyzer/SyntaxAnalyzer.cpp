@@ -501,44 +501,78 @@ bool SyntaxAnalyzer::assign()
 //THIS NEEDS FIXING
 bool SyntaxAnalyzer::ifFunction()
 {
-	if (syntaxTokens[current_token_index].value == "(")
+	if (syntaxTokens[current_token_index].value == "if")
 	{
 		current_token_index++;
-		if (condition())
+		if (syntaxTokens[current_token_index].value == "(")
 		{
-			if (syntaxTokens[current_token_index].value == ")")
+			current_token_index++;
+			if (condition())
 			{
-				current_token_index++;
-				if (statement())
+				if (syntaxTokens[current_token_index].value == ")")
 				{
-					if (ifFunctionPrime())
-						return true;
+					current_token_index++;
+					if (statement())
+					{
+						if (ifFunctionPrime())
+							return true;
+						else
+							return false;
+					}
 					else
 						return false;
 				}
 				else
+				{
+					cout << "Error: Expected ')'."
+						<< syntaxTokens[current_token_index].value << endl;
 					return false;
+				}
 			}
 			else
-			{
-				cout << "Error: Expected ')'."
-					<< syntaxTokens[current_token_index].value << endl;
 				return false;
-			}
 		}
 		else
+		{
+			cout << "Error: Expected '('."
+				<< syntaxTokens[current_token_index].value << endl;
 			return false;
+		}
 	}
 	else
 	{
-		cout << "Error: Expected '('."
+		cout << "Error: Expected 'if'."
 			<< syntaxTokens[current_token_index].value << endl;
 		return false;
 	}
 }
 bool SyntaxAnalyzer::ifFunctionPrime()
 {
-
+	if (syntaxTokens[current_token_index].value == "fi")
+	{
+		current_token_index++;
+		return true;
+	}
+	if (syntaxTokens[current_token_index].value == "else")
+	{
+		current_token_index++;
+		if (statement())
+		{
+			if (syntaxTokens[current_token_index].value == "fi")
+			{
+				current_token_index++;
+				return true;
+			}
+			else
+				return false;
+		}
+	}
+	else
+	{
+		cout << "Error: Expected 'fi'."
+			<< syntaxTokens[current_token_index].value << endl;
+		return false;
+	}
 }
 
 
