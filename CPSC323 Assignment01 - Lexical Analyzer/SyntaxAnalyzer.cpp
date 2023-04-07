@@ -311,19 +311,23 @@ bool SyntaxAnalyzer::optDeclarationList()
 }
 
 
-bool SyntaxAnalyzer::ids()
-{
-	return false;
-}
-
+//<DeclarationList::= <Declaration>; <DeclarationList'>
 bool SyntaxAnalyzer::declarationList()
 {
-	return false;
-}
+	if (declaration())
+	{
+		if (syntaxTokens[current_token_index].value == ";")
+		{
+			current_token_index++;
+			if (declarationListPrime())
+				return true;
+			else
+				return false;
+		}
+	}
+	else
+		return false;
 
-bool SyntaxAnalyzer::statementList()
-{
-	return false;
 }
 
 bool SyntaxAnalyzer::identifier()
@@ -337,23 +341,275 @@ bool SyntaxAnalyzer::declarationListPrime()
 	//if statement to check whether epsilon or functions.
 	//if token is == to declaration go back in?
 	//else epsilon
-	if (syntaxTokens[current_token_index].value == "....")
+
+	if (declaration())
 	{
-		declaration();
-		declarationListPrime();
+		if (syntaxTokens[current_token_index].value == ";")
+		{
+			current_token_index++;
+			if (declarationListPrime())
+				return true;
+			else
+				return false;
+		}
+		else
+			return false;
 	}
 	else
-		return true; // epsilon
+		return false;
 }
 
 bool SyntaxAnalyzer::declaration()
 {
-	qualifier();
-	ids();
+	if (qualifier())
+		if (ids())
+			return true;
+		else return false;
+	else
+		return false;
 }
 
+bool SyntaxAnalyzer::ids()
+{
+	if (identifier())
+	{
+		if (idsPrime())
+			return true;
+		else
+			return false;
+	}
+	else
+		return false;
+}
 bool SyntaxAnalyzer::idsPrime()
 {
-	//if identifier || idsprime
-	//else return something (epsilon)
+	if (syntaxTokens[current_token_index].value == ",")
+	{
+		if (identifier())
+		{
+			if (idsPrime())
+				return true;
+			else
+				return false;
+		}
+		else
+			return false;
+
+		return false;
+	}
+	else
+		return false;
+}
+
+
+bool SyntaxAnalyzer::statementList()
+{
+	if (statement())
+	{
+		if (statementListPrime())
+			return true;
+		else
+			return false;
+	}
+	else
+		return false;
+}
+
+bool SyntaxAnalyzer::statementListPrime()
+{
+	if (statement())
+	{
+		if (statementListPrime())
+			return true;
+		else
+			return false;
+	}
+	else
+		return false;
+}
+//<Statement> :: = <Compound> | <Assign> | <If> | <Return> | <Print> | <Scan> | <While>
+bool SyntaxAnalyzer::statement()
+{
+	if (compound())
+		return true;
+	if (assign())
+		return true;
+	if (ifFunction())
+		return true;
+	if (returnFunction())
+		return true;
+	if (print())
+		return true;
+	if (scan())
+		return true;
+	if (whileFunction());
+		return true;
+}
+
+bool SyntaxAnalyzer::compound()
+{
+
+	if (syntaxTokens[current_token_index].value == "{")
+	{
+		current_token_index++;
+		if (statementList())
+		{
+			if (syntaxTokens[current_token_index].value == "}")
+				return true;
+			else
+			{
+				cout << "Error: Expected '}'."
+					<< syntaxTokens[current_token_index].value << endl;
+				return false;
+			}
+		}
+		else
+			return false;
+	}
+	else
+	{
+		cout << "Error: Expected '{'."
+			<< syntaxTokens[current_token_index].value << endl;
+		return false;
+	}
+}
+
+bool SyntaxAnalyzer::assign()
+{
+	if (identifier())
+	{
+		if (syntaxTokens[current_token_index].value == "=")
+		{
+			current_token_index++;
+			if (expression())
+				return true;
+			else
+				return false;
+		}
+		else
+		{
+			cout << "Error: Expected '='."
+				<< syntaxTokens[current_token_index].value << endl;
+			return false;
+		}
+	}
+	else
+		return false;
+}
+
+
+//THIS NEEDS FIXING
+bool SyntaxAnalyzer::ifFunction()
+{
+	if (syntaxTokens[current_token_index].value == "(")
+	{
+		current_token_index++;
+		if (condition())
+		{
+			if (syntaxTokens[current_token_index].value == ")")
+			{
+				current_token_index++;
+				if (statement())
+				{
+					if (ifFunctionPrime())
+						return true;
+					else
+						return false;
+				}
+				else
+					return false;
+			}
+			else
+			{
+				cout << "Error: Expected ')'."
+					<< syntaxTokens[current_token_index].value << endl;
+				return false;
+			}
+		}
+		else
+			return false;
+	}
+	else
+	{
+		cout << "Error: Expected '('."
+			<< syntaxTokens[current_token_index].value << endl;
+		return false;
+	}
+}
+bool SyntaxAnalyzer::ifFunctionPrime()
+{
+
+}
+
+
+
+
+
+
+
+
+
+
+
+//THESE NEED FIXING.
+bool SyntaxAnalyzer::returnFunction()
+{
+	if (syntaxTokens[current_token_index].value == "return")
+	{
+		current_token_index++;
+		return true;
+	}
+	else
+	{
+		cout << "Error: Expected return. "
+			<< syntaxTokens[current_token_index].value << endl;
+		return false;
+	}
+}
+bool SyntaxAnalyzer::print()
+{
+	if (syntaxTokens[current_token_index].value == "print")
+	{
+		current_token_index++;
+		return true;
+	}
+	else
+	{
+		cout << "Error: Expected print."
+			<< syntaxTokens[current_token_index].value << endl;
+		return false;
+	}
+}
+bool SyntaxAnalyzer::scan()
+{
+	if (syntaxTokens[current_token_index].value == "scan")
+	{
+		current_token_index++;
+		return true;
+	}
+	else
+	{
+		cout << "Error: Expected scan. "
+			<< syntaxTokens[current_token_index].value << endl;
+		return false;
+	}
+}
+bool SyntaxAnalyzer::whileFunction()
+{
+	if (syntaxTokens[current_token_index].value == "while")
+	{
+		current_token_index++;
+		return true;
+	}
+	else
+	{
+		cout << "Error: Expected while."
+			<< syntaxTokens[current_token_index].value << endl;
+		return false;
+	}
+}
+
+bool SyntaxAnalyzer::expression()
+{
+	return true;
 }

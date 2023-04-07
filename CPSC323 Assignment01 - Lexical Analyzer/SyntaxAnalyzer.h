@@ -34,10 +34,28 @@ public:
 
     //abcd
 
-    //Rule 13-24
+    //Rule 12-17
     bool declarationListPrime();
     bool declaration();
     bool idsPrime();
+
+    //Rule 18 <Statement  List>::= <Statement><Statement List'>
+    bool statementListPrime();
+    bool statement();
+
+    //Rule 20 <Statement> ::= <Compound> | <Assign> | <If> | <Return> | <Print> | <Scan> | <While>
+    bool compound();
+    bool assign();
+    bool ifFunction();
+    bool ifFunctionPrime();
+    bool returnFunction();
+    bool print();
+    bool scan();
+    bool whileFunction();
+    bool expression();
+
+    //Rule 30
+    bool condition();
 
 private:
 
