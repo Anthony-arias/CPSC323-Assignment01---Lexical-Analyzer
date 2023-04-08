@@ -286,7 +286,7 @@ void SyntaxAnalyzer::statementListPrime()
 //<Statement> :: = <Compound> | <Assign> | <If> | <Return> | <Print> | <Scan> | <While>
 void SyntaxAnalyzer::statement()
 {
-	if(syntaxTokens[current_token_index].value == "{")
+	if (syntaxTokens[current_token_index].value == "{")
 		compound();
 	else if (syntaxTokens[current_token_index].type == "IDENTIFIER")
 		assign();
@@ -300,6 +300,8 @@ void SyntaxAnalyzer::statement()
 		scan();
 	else if (syntaxTokens[current_token_index].value == "while")
 		whileRule();
+	else
+		throwError();
 }
 
 void SyntaxAnalyzer::compound()
