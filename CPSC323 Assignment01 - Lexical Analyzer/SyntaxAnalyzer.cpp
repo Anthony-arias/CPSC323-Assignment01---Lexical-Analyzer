@@ -288,17 +288,17 @@ void SyntaxAnalyzer::statement()
 {
 	if(syntaxTokens[current_token_index].value == "{")
 		compound();
-	if (syntaxTokens[current_token_index].type == "IDENTIFIER")
+	else if (syntaxTokens[current_token_index].type == "IDENTIFIER")
 		assign();
-	if (syntaxTokens[current_token_index].value == "if")
+	else if (syntaxTokens[current_token_index].value == "if")
 		ifFunction();
-	if (syntaxTokens[current_token_index].value == "return")
+	else if (syntaxTokens[current_token_index].value == "return")
 		returnRule();
-	if (syntaxTokens[current_token_index].value == "print")
+	else if (syntaxTokens[current_token_index].value == "print")
 		print();
-	if (syntaxTokens[current_token_index].value == "(")
+	else if (syntaxTokens[current_token_index].value == "(")
 		scan();
-	if (syntaxTokens[current_token_index].value == "while")
+	else if (syntaxTokens[current_token_index].value == "while")
 		whileRule();
 }
 
