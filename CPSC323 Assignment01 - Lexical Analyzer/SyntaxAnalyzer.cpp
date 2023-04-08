@@ -391,7 +391,6 @@ void SyntaxAnalyzer::ifFunctionPrime()
 {
 	if (syntaxTokens[current_token_index].value == "fi")
 		current_token_index++;
-
 	else if (syntaxTokens[current_token_index].value == "else")
 	{
 		current_token_index++;
