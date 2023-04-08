@@ -1,0 +1,5 @@
+TOKEN               LEXEME              
+
+KEYWORD             int                 
+IDENTIFIER          x                   
+SEPARATOR           ;                   

@@ -6,31 +6,40 @@ class SyntaxAnalyzer {
 public:
 
     vector<Token> syntaxTokens;
+
     //helper functions
     void outputTokenValueAndIterate();
     void throwError();
 
     // Rule 1
-    bool rat23S();
+    void rat23S();
     // Rule 2
-    bool optFunctionDefinitions();
-    bool optDeclarationList();
-    bool statementList();
-    bool functionDefinitions();
-    bool function();
-    bool functionDefinitionsPrime();
-
-
-
-
-
-
-
-
-
-
-
-
+    void optFunctionDefinitions();
+    //void optDeclarationList();
+    //void statementList();
+    void functionDefinitions();
+    void function();
+    void functionDefinitionsPrime();
+    void optParameterList();
+    void parameterList();
+    void parameterListPrime();
+    void parameter();
+    void qualifier();
+    void body();
+    void optDeclarationList();
+    void declarationList();
+    void declarationListPrime();
+    void declaration();
+    void ids();
+    void idsPrime();
+    void statementList();
+    void statementListPrime();
+    void statement();
+    void compound();
+    void assign();
+    void ifRule();
+    void ifRulePrime();
+   
 
     // Rule 25 - 37
     void returnRule();

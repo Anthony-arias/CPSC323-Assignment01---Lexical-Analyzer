@@ -5,7 +5,7 @@
 // Also iterates the current token index
 void SyntaxAnalyzer::outputTokenValueAndIterate()
 {
-	cout << "Token: " << syntaxTokens[current_token_index].type << "Lexeme: " << syntaxTokens[current_token_index].value << endl;
+	cout << "Token: " << syntaxTokens[current_token_index].type << "		" << "Lexeme: " << syntaxTokens[current_token_index].value << endl;
 	current_token_index++;
 }
 
@@ -16,89 +16,284 @@ void  SyntaxAnalyzer::throwError()
 }
 
 // R1. <Rat23S> ::= <Opt Function Definitions> # <Opt Declaration List> # <Statement List>
-bool SyntaxAnalyzer::rat23S()
+void SyntaxAnalyzer::rat23S()
 {
 	optFunctionDefinitions();
-	if (syntaxTokens[current_token_index].value == "#")
-	{
-		optDeclarationList();
-		if (syntaxTokens[current_token_index].value == "#")
-		{
-			statementList();
-			return true;
-		}
-		else 
-		{
-			cout << "Error: Expected '#' after declaration list. Found: "
-				<< syntaxTokens[current_token_index].value << endl;
-			return false;
-		}
-	}
-	else
-	{
-		cout << "Error: Expected '#' after function definitions. Found: "
-			<< syntaxTokens[current_token_index].value << endl;
-		return false;
-	}
-
-	return true;
+	if (syntaxTokens[current_token_index].value == "eof") return;
+	optDeclarationList();
+	if (syntaxTokens[current_token_index].value == "eof") return;
+	statementList();
+	if (syntaxTokens[current_token_index].value == "eof") return;
+	else throwError();
 }
 
 // R2. <Opt Function Definitions> :: = <Function Definitions> | <Empty>
-bool SyntaxAnalyzer::optFunctionDefinitions()
+void SyntaxAnalyzer::optFunctionDefinitions()
 {
 	// Try to match <Function Definitions>
-	if (functionDefinitions()) {
-		return true;
+	if (syntaxTokens[current_token_index].value == "function") {
+		functionDefinitions();
 	}
-
-	// Otherwise, match <Empty>
-	return true;
-}
-
-bool SyntaxAnalyzer::optDeclarationList()
-{
-	return false;
-}
-
-bool SyntaxAnalyzer::statementList()
-{
-	return false;
 }
 
 // R3. <Function Definitions> :: = <Function> < Function Definitions'>
-bool SyntaxAnalyzer::functionDefinitions()
+void SyntaxAnalyzer::functionDefinitions()
 {
-	if (function())
+	function();
+	functionDefinitionsPrime();
+}
+
+// R4
+void SyntaxAnalyzer::functionDefinitionsPrime()
+{
+	if (syntaxTokens[current_token_index].value == "function")
 	{
-		if (functionDefinitionsPrime())
-		{
-			return true;
-		}
-		else
-		{
-			//error
-			return false;
-		}
+		function();
+		functionDefinitions();
 	}
-	else 
+}
+
+// R5 add errors
+void SyntaxAnalyzer::function()
+{
+	if (syntaxTokens[current_token_index].value == "function")
 	{
-		//error
-		return false;
+		outputTokenValueAndIterate();
+		
 	}
-	
+
+	if (syntaxTokens[current_token_index].type == "IDENTIFIER")
+	{
+		outputTokenValueAndIterate();
+		
+	}
+
+	if (syntaxTokens[current_token_index].value == "(")
+	{
+		outputTokenValueAndIterate();
+	}
+
+	optParameterList();
+
+	if (syntaxTokens[current_token_index].value == ")")
+	{
+		outputTokenValueAndIterate();
+		optDeclarationList();
+	}
+
+	optDeclarationList();
+	body();
 }
 
-bool SyntaxAnalyzer::function()
+// R6
+void SyntaxAnalyzer::optParameterList()
 {
-	return false;
+	parameterList();
 }
 
-bool SyntaxAnalyzer::functionDefinitionsPrime()
+// R7
+void SyntaxAnalyzer::parameterList()
 {
-	return false;
+	parameter();
+	parameterListPrime();
 }
 
+// R8
+void SyntaxAnalyzer::parameterListPrime()
+{
+	if (syntaxTokens[current_token_index].value == ",")
+	{
+		outputTokenValueAndIterate();
+		parameter();
+		parameterListPrime();
+	}
+}
+
+// R9
+void SyntaxAnalyzer::parameter()
+{
+	ids();
+	qualifier();
+}
+
+// R10
+void SyntaxAnalyzer::qualifier()
+{
+	if (syntaxTokens[current_token_index].value == "int" ||
+		syntaxTokens[current_token_index].value == "bool" ||
+		syntaxTokens[current_token_index].value == "real") 	outputTokenValueAndIterate();
+	else throwError();
+}
+
+// R11
+void SyntaxAnalyzer::body()
+{
+	if (syntaxTokens[current_token_index].value == "{") outputTokenValueAndIterate();
+	else throwError();
+
+	statementList();
+
+	if (syntaxTokens[current_token_index].value == "}") outputTokenValueAndIterate();
+	else throwError();
+}
+
+// R12 +++++++++++++++++++++++++++++++++++
+void SyntaxAnalyzer::optDeclarationList()
+{
+	declarationList();
+}
+
+// R13
+void SyntaxAnalyzer::declarationList()
+{
+	declaration();
+	if (syntaxTokens[current_token_index].value == ";") outputTokenValueAndIterate();
+	else throwError();
+	declarationListPrime();
+}
+
+// R14 ++++++++++++++++++++++++++++++++++++++++
+void SyntaxAnalyzer::declarationListPrime()
+{
+
+	if (syntaxTokens[current_token_index].value == "int" ||
+		syntaxTokens[current_token_index].value == "bool" ||
+		syntaxTokens[current_token_index].value == "real")
+	{
+		declaration();
+		if (syntaxTokens[current_token_index].value == ";") outputTokenValueAndIterate();
+		else throwError();
+		declarationListPrime();
+
+	}
+}
+
+// R15
+void SyntaxAnalyzer::declaration()
+{
+	qualifier();
+	ids();
+}
+
+// R16
+void SyntaxAnalyzer::ids()
+{
+	if (syntaxTokens[current_token_index].type == "IDENTIFIER") outputTokenValueAndIterate();
+	else throwError();
+	idsPrime();
+}
+
+// R17
+void SyntaxAnalyzer::idsPrime()
+{
+	if (syntaxTokens[current_token_index].value == ",")
+	{
+		outputTokenValueAndIterate();
+		if (syntaxTokens[current_token_index].type == "IDENTIFIER") outputTokenValueAndIterate();
+		else throwError();
+		idsPrime();
+	}
+}
+
+// R18 +++++++++++++++++++
+void SyntaxAnalyzer::statementList()
+{
+	statement();
+	statementListPrime();
+}
+
+// R19
+void SyntaxAnalyzer::statementListPrime()
+{
+	if (syntaxTokens[current_token_index].type == "KEYWORD" ||
+		syntaxTokens[current_token_index].type == "IDENTIFIER" ||
+		syntaxTokens[current_token_index].value == "{")
+	{
+		statement();
+		statementListPrime();
+	}
+}
+
+// R20
+void SyntaxAnalyzer::statement()
+{
+	if (syntaxTokens[current_token_index].value == "{")
+		compound();
+	else if (syntaxTokens[current_token_index].type == "IDENTIFIER")
+		assign();
+	else if (syntaxTokens[current_token_index].value == "if")
+		ifRule();
+	else if (syntaxTokens[current_token_index].value == "return")
+		returnRule();
+	else if (syntaxTokens[current_token_index].value == "print")
+		print();
+	else if (syntaxTokens[current_token_index].value == "get")
+		scan();
+	else if (syntaxTokens[current_token_index].value == "while")
+		whileRule();
+	else
+		throwError();
+}
+
+// R21
+void SyntaxAnalyzer::compound()
+{
+	if (syntaxTokens[current_token_index].value == "{") outputTokenValueAndIterate();
+	else throwError();
+
+	statementList();
+
+	if (syntaxTokens[current_token_index].value == "}") outputTokenValueAndIterate();
+	else throwError();
+}
+
+// R22
+void SyntaxAnalyzer::assign()
+{
+	if (syntaxTokens[current_token_index].type == "IDENTIFIER") outputTokenValueAndIterate();
+	else throwError();
+
+	if (syntaxTokens[current_token_index].value == "=") outputTokenValueAndIterate();
+	else throwError();
+
+	expression();
+}
+
+// R23
+void SyntaxAnalyzer::ifRule()
+{
+	if (syntaxTokens[current_token_index].value == "if") outputTokenValueAndIterate();
+	else throwError();
+
+	if (syntaxTokens[current_token_index].value == "(") outputTokenValueAndIterate();
+	else throwError();
+
+	condition();
+
+	if (syntaxTokens[current_token_index].value == ")") outputTokenValueAndIterate();
+	else throwError();
+
+	statement();
+
+	ifRulePrime();
+}
+
+// R24 ++++++++++++++++++++++++++++++
+void SyntaxAnalyzer::ifRulePrime()
+{
+	if (syntaxTokens[current_token_index].value == "fi") outputTokenValueAndIterate();
+	else if (syntaxTokens[current_token_index].value == "else")
+	{
+		outputTokenValueAndIterate();
+		statement();
+		if (syntaxTokens[current_token_index].value == "fi") outputTokenValueAndIterate();
+		else throwError();
+	}
+	else throwError();
+
+}
+
+// 25
 void SyntaxAnalyzer::returnRule()
 {
 	if (syntaxTokens[current_token_index].value == "return") outputTokenValueAndIterate();
@@ -114,7 +309,7 @@ void SyntaxAnalyzer::returnRulePrime()
 		expression();
 		if (syntaxTokens[current_token_index].value == ";")
 		{
-			outputTokenAndValue();
+			outputTokenValueAndIterate();
 			current_token_index++;
 		}
 		else throwError();
