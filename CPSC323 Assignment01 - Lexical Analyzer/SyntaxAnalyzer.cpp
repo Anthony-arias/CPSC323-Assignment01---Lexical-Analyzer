@@ -286,13 +286,20 @@ void SyntaxAnalyzer::statementListPrime()
 //<Statement> :: = <Compound> | <Assign> | <If> | <Return> | <Print> | <Scan> | <While>
 void SyntaxAnalyzer::statement()
 {
-	compound();
-	assign();
-	ifFunction();
-	returnRule();
-	print();
-	scan();
-	whileRule();
+	if(syntaxTokens[current_token_index].value == "{")
+		compound();
+	if (syntaxTokens[current_token_index].type == "IDENTIFIER")
+		assign();
+	if (syntaxTokens[current_token_index].value == "if")
+		ifFunction();
+	if (syntaxTokens[current_token_index].value == "return")
+		returnRule();
+	if (syntaxTokens[current_token_index].value == "print")
+		print();
+	if (syntaxTokens[current_token_index].value == "(")
+		scan();
+	if (syntaxTokens[current_token_index].value == "while")
+		whileRule();
 }
 
 void SyntaxAnalyzer::compound()
@@ -346,8 +353,6 @@ void SyntaxAnalyzer::assign()
 	}
 }
 
-
-//THIS NEEDS FIXING
 void SyntaxAnalyzer::ifFunction()
 {
 	if (syntaxTokens[current_token_index].value == "if")
