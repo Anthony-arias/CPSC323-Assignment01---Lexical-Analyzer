@@ -9,7 +9,7 @@ public:
 
     //helper functions
     void outputTokenValueAndIterate();
-    void throwError();
+    void throwError(string expectedTokenType, string expectedToken);
     string toUpper(std::string str);
 
     // Rule 1

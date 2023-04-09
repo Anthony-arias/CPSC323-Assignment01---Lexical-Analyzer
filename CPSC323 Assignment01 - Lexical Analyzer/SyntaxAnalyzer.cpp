@@ -11,13 +11,15 @@ void SyntaxAnalyzer::outputTokenValueAndIterate()
 }
 
 // Throw error if token value is incorrect
-void SyntaxAnalyzer::throwError() 
+void SyntaxAnalyzer::throwError(string expectedTokenType, string expectedToken) 
 {
-	std::string error_message = "Syntax Error: Invalid token type '"
+	std::string error_message = "Syntax Error: Invalid token type, Found token type '"
 		+ syntaxTokens[current_token_index].type
-		+ "' at line "
-		+ std::to_string(__LINE__) // Gets current line syntax error is on
-		+ " (Lexeme: '"
+		+ "' Expected token type '"
+		+ expectedTokenType
+		+ "' Expected lexeme: '"
+		+ expectedToken
+		+ "' (Found Lexeme: '"
 		+ syntaxTokens[current_token_index].value
 		+ "')";
 	throw std::invalid_argument(error_message);
@@ -46,14 +48,14 @@ void SyntaxAnalyzer::rat23S()
 		outputTokenValueAndIterate();
 		optDeclarationList();
 		if (syntaxTokens[current_token_index].value == "#") outputTokenValueAndIterate();
-		else throwError();
+		else throwError("SEPARATOR", "#");
 	}
 	if (syntaxTokens[current_token_index].value == "eof") return;
 
 	statementList();
 
 	if (syntaxTokens[current_token_index].value == "eof") return;
-	else throwError();
+	else throwError("EOF", "$");
 }
 
 // R2. <Opt Function Definitions> :: = <Function Definitions> | <Empty>
@@ -104,17 +106,17 @@ void SyntaxAnalyzer::function()
 		cout << "<Function> -> function <Identifier>(<Opt Parameter List>) < Opt Declaration List > <Body>\n";
 
 	if (syntaxTokens[current_token_index].value == "function") outputTokenValueAndIterate();
-	else throwError();
+	else throwError("KEYWORD", "function");
 
 	if (syntaxTokens[current_token_index].type == "IDENTIFIER") outputTokenValueAndIterate();
 
 	if (syntaxTokens[current_token_index].value == "(") outputTokenValueAndIterate();
-	else throwError();
+	else throwError("SEPARATOR", "(");
 
 	optParameterList();
 
 	if (syntaxTokens[current_token_index].value == ")") outputTokenValueAndIterate();
-	else throwError();
+	else throwError("SEPARATOR", "(");
 
 	optDeclarationList();
 	body();
@@ -198,7 +200,7 @@ void SyntaxAnalyzer::qualifier()
 		if (printRules)
 			cout << "<Qualifier> -> real\n";
 	}
-	else throwError();
+	else throwError("REAL", "real");
 }
 
 // R11
@@ -217,9 +219,9 @@ void SyntaxAnalyzer::body()
 			if (printRules)
 				cout << "<Body> -> { < Statement List> }\n";
 		}
-		else throwError();
+		else throwError("SEPARATOR", "}");
 	}
-	else throwError();
+	else throwError("SEPARATOR", "{");
 
 }
 
@@ -253,7 +255,7 @@ void SyntaxAnalyzer::declarationList()
 
 		declarationListPrime();
 	}
-	else throwError();
+	else throwError("SEPARATOR", ";");
 }
 
 // R14 ++++++++++++++++++++++++++++++++++++++++
@@ -274,7 +276,7 @@ void SyntaxAnalyzer::declarationListPrime()
 
 			declarationListPrime();
 		}
-		else throwError();
+		else throwError("SEPARATOR", ";");
 	}
 
 	if (printRules)
@@ -303,7 +305,7 @@ void SyntaxAnalyzer::ids()
 
 		idsPrime();
 	}
-	else throwError();
+	else throwError("IDENTIFIER", " ");
 }
 
 // R17
@@ -321,7 +323,7 @@ void SyntaxAnalyzer::idsPrime()
 
 			idsPrime();
 		}
-		else throwError();
+		else throwError("IDENTIFIER", " ");
 	}
 }
 
@@ -406,7 +408,7 @@ void SyntaxAnalyzer::statement()
 		whileRule();
 	}
 	else
-		throwError();
+		throwError("KEYWORD", "while");
 }
 
 // R21
@@ -425,9 +427,9 @@ void SyntaxAnalyzer::compound()
 			if (printRules)
 				cout << "<Compound> -> { <Statement List> }\n";
 		}
-		else throwError();
+		else throwError("SEPARATOR", "}");
 	}
-	else throwError();
+	else throwError("SEPARATOR", "{");
 
 }
 
@@ -452,11 +454,11 @@ void SyntaxAnalyzer::assign()
 				if (printRules)
 					cout << "<Assign> -> <Identifier> = <Expression> ;\n";
 			}
-			else throwError();
+			else throwError("SEPARATOR", ";");
 		}
-		else throwError();
+		else throwError("OPERATOR", "=");
 	}
-	else throwError();
+	else throwError("IDENTIFIER", " ");
 
 }
 
@@ -484,11 +486,11 @@ void SyntaxAnalyzer::ifRule()
 
 				ifRulePrime();
 			}
-			else throwError();
+			else throwError("SEPARATOR", ")");
 		}
-		else throwError();
+		else throwError("SEPARATOR", "(");
 	}
-	else throwError();
+	else throwError("KEYWORD", "if");
 
 }
 
@@ -513,9 +515,9 @@ void SyntaxAnalyzer::ifRulePrime()
 			if (printRules)
 				cout << "<If'> -> else <Statement> fi\n";
 		}
-		else throwError();
+		else throwError("KEYWORD", "fi");
 	}
-	else throwError();
+	else throwError("KEYWORD", "else");
 
 }
 
@@ -531,7 +533,7 @@ void SyntaxAnalyzer::returnRule()
 
 		returnRulePrime();
 	}
-	else throwError();
+	else throwError("KEYWORD", "return");
 
 }
 
@@ -554,7 +556,7 @@ void SyntaxAnalyzer::returnRulePrime()
 			if (printRules)
 				cout << "<Return'> -> <Expression> ;\n";
 		}
-		else throwError();
+		else throwError("SEPARATOR", ";");
 	}
 }
 
@@ -581,13 +583,13 @@ void SyntaxAnalyzer::print()
 					if (printRules)
 						cout << "<Print> -> put ( <Expression> );\n";
 				}
-				else throwError();
+				else throwError("SEPARATOR", ";");
 			}
-			else throwError();
+			else throwError("SEPARATOR", ")");
 		}
-		else throwError();
+		else throwError("SEPARATOR", "(");
 	}
-	else throwError();
+	else throwError("KEYWORD", "put");
 }
 
 void SyntaxAnalyzer::scan()
@@ -613,14 +615,14 @@ void SyntaxAnalyzer::scan()
 					if (printRules)
 						cout << "<Scan> -> get ( <IDs> );\n";
 				}
-				else throwError();
+				else throwError("SEPARATOR", ";");
 			}
-			else throwError();
+			else throwError("SEPARATOR", ")");
 		}
-		else throwError();
+		else throwError("SEPARATOR", "(");
 
 	}
-	else throwError();
+	else throwError("KEYWORD", "get");
 
 }
 
@@ -649,13 +651,13 @@ void SyntaxAnalyzer::whileRule()
 					if (printRules)
 						cout << "<While> -> while ( <Condition> ) <Statement> endwhile\n";
 				}
-				else throwError();
+				else throwError("KEYWORD", "endwhile");
 			}
-			else throwError();
+			else throwError("SEPARATOR", ")");
 		}
-		else throwError();
+		else throwError("SEPARATOR", "(");
 	}
-	else throwError();
+	else throwError("KEYWORD", "while");
 
 }
 
@@ -713,7 +715,7 @@ void SyntaxAnalyzer::relop()
 		if (printRules)
 			cout << "<Relop> -> =>\n";
 	}
-	else throwError();
+	else throwError("OPERATOR", "=>");
 }
 
 void SyntaxAnalyzer::expression()
@@ -824,7 +826,7 @@ void SyntaxAnalyzer::primary() //++++++
 			ids();
 
 			if (syntaxTokens[current_token_index].value == ")") outputTokenValueAndIterate();
-			else throwError();
+			else throwError("SEPARATOR", ")");
 		}
 	}
 	else if (syntaxTokens[current_token_index].type == "INTEGER")
@@ -855,7 +857,7 @@ void SyntaxAnalyzer::primary() //++++++
 		expression();
 
 		if (syntaxTokens[current_token_index].value == ")") outputTokenValueAndIterate();
-		else throwError();
+		else throwError("SEPARATOR", ")");
 
 	}
 	else if (syntaxTokens[current_token_index].type == "REAL")
@@ -879,5 +881,5 @@ void SyntaxAnalyzer::primary() //++++++
 		if (printRules)
 			cout << "<Primary> -> <false>\n";
 	}
-	else throwError();
+	else throwError("KEYWORD", "false");
 }
