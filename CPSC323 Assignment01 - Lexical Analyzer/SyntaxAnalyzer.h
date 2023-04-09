@@ -9,7 +9,7 @@ public:
 
     //helper functions
     void outputTokenValueAndIterate();
-    void throwError();
+    void throwError(string expectedTokenType, string expectedToken);
     string toUpper(std::string str);
 
     // Rule 1
@@ -57,7 +57,8 @@ public:
     void factor();
     void primary();
 private:
+    bool printRules = true;
     LexerAnalyzer lexer;
-    int current_token_index;
+    int current_token_index = 0;
 };
 

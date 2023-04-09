@@ -1,5 +1,7 @@
 TOKEN               LEXEME              
 
-KEYWORD             int                 
-IDENTIFIER          x                   
-SEPARATOR           ;                   
+KEYWORD             if                  
+SEPARATOR           (                   
+IDENTIFIER          a                   
+OPERATOR            >                   
+IDENTIFIER          b                   
