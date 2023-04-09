@@ -19,6 +19,7 @@
     <Text Include="Sample.txt" />
     <Text Include="Text.txt" />
     <Text Include="saTest.txt" />
+    <Text Include="saTest2.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LexerAnalyzer.cpp">

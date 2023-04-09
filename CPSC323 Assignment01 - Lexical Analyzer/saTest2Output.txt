@@ -1,0 +1,21 @@
+TOKEN               LEXEME              
+
+KEYWORD             function            
+IDENTIFIER          convert1x           
+SEPARATOR           (                   
+IDENTIFIER          fahr                
+KEYWORD             int                 
+SEPARATOR           )                   
+SEPARATOR           {                   
+KEYWORD             return              
+INTEGER             5                   
+OPERATOR            *                   
+SEPARATOR           (                   
+IDENTIFIER          fahr                
+OPERATOR            -                   
+INTEGER             32                  
+SEPARATOR           )                   
+OPERATOR            /                   
+INTEGER             9                   
+SEPARATOR           ;                   
+SEPARATOR           }                   

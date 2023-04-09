@@ -5,7 +5,7 @@
 // Also iterates the current token index
 void SyntaxAnalyzer::outputTokenValueAndIterate()
 {
-	cout << "Token: " << syntaxTokens[current_token_index].type << "		" << "Lexeme: " << syntaxTokens[current_token_index].value << endl;
+	cout << "Token: " << syntaxTokens[current_token_index].type << "			" << "Lexeme: " << syntaxTokens[current_token_index].value << endl;
 	current_token_index++;
 }
 
@@ -30,7 +30,6 @@ void SyntaxAnalyzer::rat23S()
 // R2. <Opt Function Definitions> :: = <Function Definitions> | <Empty>
 void SyntaxAnalyzer::optFunctionDefinitions()
 {
-	// Try to match <Function Definitions>
 	if (syntaxTokens[current_token_index].value == "function") {
 		functionDefinitions();
 	}
@@ -49,37 +48,25 @@ void SyntaxAnalyzer::functionDefinitionsPrime()
 	if (syntaxTokens[current_token_index].value == "function")
 	{
 		function();
-		functionDefinitions();
+		functionDefinitionsPrime();
 	}
 }
 
-// R5 add errors
+// R5 
 void SyntaxAnalyzer::function()
 {
-	if (syntaxTokens[current_token_index].value == "function")
-	{
-		outputTokenValueAndIterate();
-		
-	}
+	if (syntaxTokens[current_token_index].value == "function") outputTokenValueAndIterate();
+	else throwError();
 
-	if (syntaxTokens[current_token_index].type == "IDENTIFIER")
-	{
-		outputTokenValueAndIterate();
-		
-	}
+	if (syntaxTokens[current_token_index].type == "IDENTIFIER") outputTokenValueAndIterate();
 
-	if (syntaxTokens[current_token_index].value == "(")
-	{
-		outputTokenValueAndIterate();
-	}
+	if (syntaxTokens[current_token_index].value == "(") outputTokenValueAndIterate();
+	else throwError();
 
 	optParameterList();
 
-	if (syntaxTokens[current_token_index].value == ")")
-	{
-		outputTokenValueAndIterate();
-		optDeclarationList();
-	}
+	if (syntaxTokens[current_token_index].value == ")") outputTokenValueAndIterate();
+	else throwError();
 
 	optDeclarationList();
 	body();
@@ -88,7 +75,7 @@ void SyntaxAnalyzer::function()
 // R6
 void SyntaxAnalyzer::optParameterList()
 {
-	parameterList();
+	if (syntaxTokens[current_token_index].type == "IDENTIFIER") parameterList();
 }
 
 // R7
@@ -140,7 +127,9 @@ void SyntaxAnalyzer::body()
 // R12 +++++++++++++++++++++++++++++++++++
 void SyntaxAnalyzer::optDeclarationList()
 {
-	declarationList();
+	if (syntaxTokens[current_token_index].value == "int" ||
+		syntaxTokens[current_token_index].value == "bool" ||
+		syntaxTokens[current_token_index].value == "real") declarationList();
 }
 
 // R13
@@ -195,14 +184,14 @@ void SyntaxAnalyzer::idsPrime()
 	}
 }
 
-// R18 +++++++++++++++++++
+// R18 
 void SyntaxAnalyzer::statementList()
 {
 	statement();
 	statementListPrime();
 }
 
-// R19
+// R19 +++++++++++++++++
 void SyntaxAnalyzer::statementListPrime()
 {
 	if (syntaxTokens[current_token_index].type == "KEYWORD" ||
@@ -257,6 +246,9 @@ void SyntaxAnalyzer::assign()
 	else throwError();
 
 	expression();
+
+	if (syntaxTokens[current_token_index].value == ";") outputTokenValueAndIterate();
+	else throwError();
 }
 
 // R23
@@ -307,11 +299,7 @@ void SyntaxAnalyzer::returnRulePrime()
 	else
 	{
 		expression();
-		if (syntaxTokens[current_token_index].value == ";")
-		{
-			outputTokenValueAndIterate();
-			current_token_index++;
-		}
+		if (syntaxTokens[current_token_index].value == ";") outputTokenValueAndIterate();
 		else throwError();
 	}
 }
@@ -425,7 +413,7 @@ void SyntaxAnalyzer::factor()
 	{
 		outputTokenValueAndIterate();
 	}
-	primary();
+	else primary();
 }
 
 void SyntaxAnalyzer::primary()
