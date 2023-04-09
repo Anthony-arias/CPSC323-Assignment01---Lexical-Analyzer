@@ -10,6 +10,7 @@ public:
     //helper functions
     void outputTokenValueAndIterate();
     void throwError();
+    string toUpper(std::string str);
 
     // Rule 1
     void rat23S();

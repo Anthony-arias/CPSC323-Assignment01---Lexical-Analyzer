@@ -1,5 +1,6 @@
 
 #include "SyntaxAnalyzer.h"
+#include <algorithm>
 
 // Use when terminal value is correct and you want to output its token and value
 // Also iterates the current token index
@@ -15,14 +16,32 @@ void  SyntaxAnalyzer::throwError()
 	throw std::invalid_argument("Incorrect token value: " + syntaxTokens[current_token_index].value);
 }
 
+// Uppercase first letter used for int, bool, real
+string SyntaxAnalyzer::toUpper(std::string str) {
+
+	transform(str.begin(), str.end(), str.begin(), ::tolower);
+	str[0] = std::toupper(str[0]);
+
+	return str;
+}
+
 // R1. <Rat23S> ::= <Opt Function Definitions> # <Opt Declaration List> # <Statement List>
 void SyntaxAnalyzer::rat23S()
 {
 	optFunctionDefinitions();
 	if (syntaxTokens[current_token_index].value == "eof") return;
-	optDeclarationList();
+
+	if (syntaxTokens[current_token_index].value == "#")
+	{
+		outputTokenValueAndIterate();
+		optDeclarationList();
+		if (syntaxTokens[current_token_index].value == "#") outputTokenValueAndIterate();
+		else throwError();
+	}
 	if (syntaxTokens[current_token_index].value == "eof") return;
+
 	statementList();
+
 	if (syntaxTokens[current_token_index].value == "eof") return;
 	else throwError();
 }
@@ -106,9 +125,9 @@ void SyntaxAnalyzer::parameter()
 // R10
 void SyntaxAnalyzer::qualifier()
 {
-	if (syntaxTokens[current_token_index].value == "int" ||
-		syntaxTokens[current_token_index].value == "bool" ||
-		syntaxTokens[current_token_index].value == "real") 	outputTokenValueAndIterate();
+	if (toUpper(syntaxTokens[current_token_index].value) == "Int" ||
+		toUpper(syntaxTokens[current_token_index].value) == "Bool" ||
+		toUpper(syntaxTokens[current_token_index].value) == "Real") 	outputTokenValueAndIterate();
 	else throwError();
 }
 
@@ -127,9 +146,9 @@ void SyntaxAnalyzer::body()
 // R12 +++++++++++++++++++++++++++++++++++
 void SyntaxAnalyzer::optDeclarationList()
 {
-	if (syntaxTokens[current_token_index].value == "int" ||
-		syntaxTokens[current_token_index].value == "bool" ||
-		syntaxTokens[current_token_index].value == "real") declarationList();
+	if (toUpper(syntaxTokens[current_token_index].value) == "Int" ||
+		toUpper(syntaxTokens[current_token_index].value) == "Bool" ||
+		toUpper(syntaxTokens[current_token_index].value) == "Real") declarationList();
 }
 
 // R13
@@ -145,9 +164,9 @@ void SyntaxAnalyzer::declarationList()
 void SyntaxAnalyzer::declarationListPrime()
 {
 
-	if (syntaxTokens[current_token_index].value == "int" ||
-		syntaxTokens[current_token_index].value == "bool" ||
-		syntaxTokens[current_token_index].value == "real")
+	if (toUpper(syntaxTokens[current_token_index].value) == "Int" ||
+		toUpper(syntaxTokens[current_token_index].value) == "Bool" ||
+		toUpper(syntaxTokens[current_token_index].value) == "Real")
 	{
 		declaration();
 		if (syntaxTokens[current_token_index].value == ";") outputTokenValueAndIterate();
@@ -214,7 +233,7 @@ void SyntaxAnalyzer::statement()
 		ifRule();
 	else if (syntaxTokens[current_token_index].value == "return")
 		returnRule();
-	else if (syntaxTokens[current_token_index].value == "print")
+	else if (syntaxTokens[current_token_index].value == "put")
 		print();
 	else if (syntaxTokens[current_token_index].value == "get")
 		scan();
@@ -416,11 +435,22 @@ void SyntaxAnalyzer::factor()
 	else primary();
 }
 
-void SyntaxAnalyzer::primary()
+void SyntaxAnalyzer::primary() //++++++
 {
-	if (syntaxTokens[current_token_index].type == "IDENTIFIER") outputTokenValueAndIterate();
+	if (syntaxTokens[current_token_index].type == "IDENTIFIER")
+	{
+		outputTokenValueAndIterate();
+		if (syntaxTokens[current_token_index].value == "(")
+		{
+			outputTokenValueAndIterate();
+			ids();
+
+			if (syntaxTokens[current_token_index].value == ")") outputTokenValueAndIterate();
+			else throwError();
+		}
+	}
 	else if (syntaxTokens[current_token_index].type == "INTEGER") outputTokenValueAndIterate();
-	else if (syntaxTokens[current_token_index].type == "IDENTIFIER")
+	/*else if (syntaxTokens[current_token_index].type == "IDENTIFIER")
 	{
 		outputTokenValueAndIterate();
 		if (syntaxTokens[current_token_index].value == "(") outputTokenValueAndIterate();
@@ -430,7 +460,7 @@ void SyntaxAnalyzer::primary()
 
 		if (syntaxTokens[current_token_index].value == ")") outputTokenValueAndIterate();
 		else throwError();
-	}
+	}*/
 	else if (syntaxTokens[current_token_index].value == "(")
 	{
 		outputTokenValueAndIterate();
