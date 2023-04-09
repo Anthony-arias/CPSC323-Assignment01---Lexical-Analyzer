@@ -177,30 +177,27 @@ void SyntaxAnalyzer::parameter()
 // R10
 void SyntaxAnalyzer::qualifier()
 {
-	if (syntaxTokens[current_token_index].value == "int")
+	if (toUpper(syntaxTokens[current_token_index].value) == "Int")
 	{
 		outputTokenValueAndIterate();
 
 		if (printRules)
 			cout << "<Qualifier> -> int\n";
 	}
-	else if (syntaxTokens[current_token_index].value == "bool")
+	else if (toUpper(syntaxTokens[current_token_index].value) == "Bool")
 	{
 		outputTokenValueAndIterate();
 
 		if (printRules)
 			cout << "<Qualifier> -> bool\n";
 	}
-	else if (syntaxTokens[current_token_index].value == "real")
+	else if (toUpper(syntaxTokens[current_token_index].value) == "Real")
 	{
 		outputTokenValueAndIterate();
 
 		if (printRules)
 			cout << "<Qualifier> -> real\n";
 	}
-	if (toUpper(syntaxTokens[current_token_index].value) == "Int" ||
-		toUpper(syntaxTokens[current_token_index].value) == "Bool" ||
-		toUpper(syntaxTokens[current_token_index].value) == "Real") 	outputTokenValueAndIterate();
 	else throwError();
 }
 
@@ -229,20 +226,16 @@ void SyntaxAnalyzer::body()
 // R12 +++++++++++++++++++++++++++++++++++
 void SyntaxAnalyzer::optDeclarationList()
 {
-	if (syntaxTokens[current_token_index].value == "int" ||
-		syntaxTokens[current_token_index].value == "bool" ||
-		syntaxTokens[current_token_index].value == "real")
+	if (toUpper(syntaxTokens[current_token_index].value) == "Int" ||
+		toUpper(syntaxTokens[current_token_index].value) == "Bool" ||
+		toUpper(syntaxTokens[current_token_index].value) == "Real")
 	{
 		if (printRules)
 			cout << "<Opt Declaration List> -> <Declaration List>\n";
 
 		declarationList();
 	}
-	if (toUpper(syntaxTokens[current_token_index].value) == "Int" ||
-		toUpper(syntaxTokens[current_token_index].value) == "Bool" ||
-		toUpper(syntaxTokens[current_token_index].value) == "Real") declarationList();
-}
-
+	
 	if (printRules)
 		cout << "<Opt Declaration List> -> E\n";
 }
@@ -391,12 +384,11 @@ void SyntaxAnalyzer::statement()
 
 		returnRule();
 	}
-	else if (syntaxTokens[current_token_index].value == "print")
+	else if (syntaxTokens[current_token_index].value == "put")
 	{
 		if (printRules)
 			cout << "<Statement> -> <Print>\n";
 
-	else if (syntaxTokens[current_token_index].value == "put")
 		print();
 	}
 	else if (syntaxTokens[current_token_index].value == "get")
@@ -822,6 +814,10 @@ void SyntaxAnalyzer::primary() //++++++
 	if (syntaxTokens[current_token_index].type == "IDENTIFIER")
 	{
 		outputTokenValueAndIterate();
+
+		if (printRules)
+			cout << "<Primary> -> <Identifier>\n";
+
 		if (syntaxTokens[current_token_index].value == "(")
 		{
 			outputTokenValueAndIterate();
@@ -831,7 +827,13 @@ void SyntaxAnalyzer::primary() //++++++
 			else throwError();
 		}
 	}
-	else if (syntaxTokens[current_token_index].type == "INTEGER") outputTokenValueAndIterate();
+	else if (syntaxTokens[current_token_index].type == "INTEGER")
+	{
+		outputTokenValueAndIterate();
+
+		if (printRules)
+			cout << "<Primary> -> <Integer>\n";
+	}
 	/*else if (syntaxTokens[current_token_index].type == "IDENTIFIER")
 	{
 		outputTokenValueAndIterate();
@@ -847,13 +849,14 @@ void SyntaxAnalyzer::primary() //++++++
 	{
 		outputTokenValueAndIterate();
 
+		if (printRules)
+			cout << "<Primary> -> <Expression>\n";
+
 		expression();
 
 		if (syntaxTokens[current_token_index].value == ")") outputTokenValueAndIterate();
 		else throwError();
 
-		if (printRules)
-			cout << "<Primary> -> ( <Expression> )\n";
 	}
 	else if (syntaxTokens[current_token_index].type == "REAL")
 	{

@@ -1,5 +1,8 @@
 TOKEN               LEXEME              
 
-KEYWORD             int                 
-IDENTIFIER          x                   
+IDENTIFIER          a                   
+OPERATOR            =                   
+IDENTIFIER          b                   
+OPERATOR            +                   
+IDENTIFIER          c                   
 SEPARATOR           ;                   
