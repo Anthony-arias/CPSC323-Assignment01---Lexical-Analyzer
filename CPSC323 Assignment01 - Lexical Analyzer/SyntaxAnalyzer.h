@@ -56,7 +56,8 @@ public:
     void factor();
     void primary();
 private:
+    bool printRules = true;
     LexerAnalyzer lexer;
-    int current_token_index;
+    int current_token_index = 0;
 };
 

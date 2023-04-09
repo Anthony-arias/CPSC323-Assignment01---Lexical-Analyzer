@@ -10,9 +10,16 @@ void SyntaxAnalyzer::outputTokenValueAndIterate()
 }
 
 // Throw error if token value is incorrect
-void  SyntaxAnalyzer::throwError()
+void SyntaxAnalyzer::throwError() 
 {
-	throw std::invalid_argument("Incorrect token value: " + syntaxTokens[current_token_index].value);
+	std::string error_message = "Syntax Error: Invalid token type '"
+		+ syntaxTokens[current_token_index].type
+		+ "' at line "
+		+ std::to_string(__LINE__) // Gets current line syntax error is on
+		+ " (Lexeme: '"
+		+ syntaxTokens[current_token_index].value
+		+ "')";
+	throw std::invalid_argument(error_message);
 }
 
 // R1. <Rat23S> ::= <Opt Function Definitions> # <Opt Declaration List> # <Statement List>
@@ -418,8 +425,20 @@ void SyntaxAnalyzer::factor()
 
 void SyntaxAnalyzer::primary()
 {
-	if (syntaxTokens[current_token_index].type == "IDENTIFIER") outputTokenValueAndIterate();
-	else if (syntaxTokens[current_token_index].type == "INTEGER") outputTokenValueAndIterate();
+	if (syntaxTokens[current_token_index].type == "IDENTIFIER")
+	{
+		outputTokenValueAndIterate();
+
+		if (printRules)
+			cout << " <Primary> -> <Identifier> ";
+	}
+	else if (syntaxTokens[current_token_index].type == "INTEGER")
+	{
+		outputTokenValueAndIterate();
+
+		if (printRules)
+			cout << " <Primary> -> <Integer> ";
+	}
 	else if (syntaxTokens[current_token_index].type == "IDENTIFIER")
 	{
 		outputTokenValueAndIterate();
@@ -430,6 +449,9 @@ void SyntaxAnalyzer::primary()
 
 		if (syntaxTokens[current_token_index].value == ")") outputTokenValueAndIterate();
 		else throwError();
+
+		if (printRules)
+			cout << " <Primary> -> <Identifier> ( <IDs> ) ";
 	}
 	else if (syntaxTokens[current_token_index].value == "(")
 	{
@@ -439,9 +461,30 @@ void SyntaxAnalyzer::primary()
 
 		if (syntaxTokens[current_token_index].value == ")") outputTokenValueAndIterate();
 		else throwError();
+
+		if (printRules)
+			cout << " <Primary> -> ( <Expression> ) ";
 	}
-	else if (syntaxTokens[current_token_index].type == "REAL") outputTokenValueAndIterate();
-	else if (syntaxTokens[current_token_index].value == "true") outputTokenValueAndIterate();
-	else if (syntaxTokens[current_token_index].value == "false") outputTokenValueAndIterate();
+	else if (syntaxTokens[current_token_index].type == "REAL")
+	{
+		outputTokenValueAndIterate();
+
+		if (printRules)
+			cout << " <Primary> -> <Real> ";
+	}
+	else if (syntaxTokens[current_token_index].value == "true")
+	{
+		outputTokenValueAndIterate();
+
+		if (printRules)
+			cout << " <Primary> -> <true> ";
+	}
+	else if (syntaxTokens[current_token_index].value == "false")
+	{
+		outputTokenValueAndIterate();
+
+		if (printRules)
+			cout << " <Primary> -> <false> ";
+	}
 	else throwError();
 }
