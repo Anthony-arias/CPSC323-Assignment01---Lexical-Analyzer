@@ -5,12 +5,14 @@
 class SyntaxAnalyzer {
 public:
 
+    ofstream file;
     vector<Token> syntaxTokens;
 
     //helper functions
     void outputTokenValueAndIterate();
     void throwError(string expectedTokenType, string expectedToken);
     string toUpper(std::string str);
+    void fileOpen(string input);
 
     // Rule 1
     void rat23S();
@@ -60,5 +62,6 @@ private:
     bool printRules = true;
     LexerAnalyzer lexer;
     int current_token_index = 0;
+    
 };
 

@@ -75,8 +75,13 @@ int main(int argc, char* argv[]) {
     eof.value = "eof";
 
     tokens.push_back(eof);
+
     syntaxAnalyzer.syntaxTokens = tokens;
+
+
+    syntaxAnalyzer.fileOpen(userInput);
     syntaxAnalyzer.rat23S();
+    
 
     cout << "Press Enter to terminate program" << endl;
     cin.ignore(999, '\n');
