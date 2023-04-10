@@ -6,7 +6,7 @@
 // Also iterates the current token index
 void SyntaxAnalyzer::outputTokenValueAndIterate()
 {
-	cout << "Token: " << syntaxTokens[current_token_index].type << "			" << "Lexeme: " << syntaxTokens[current_token_index].value << endl;
+	cout <<  "Token: " << left << setw(20) << syntaxTokens[current_token_index].type  << "Lexeme: " << syntaxTokens[current_token_index].value << endl;
 	current_token_index++;
 }
 
@@ -38,7 +38,7 @@ string SyntaxAnalyzer::toUpper(std::string str) {
 void SyntaxAnalyzer::rat23S()
 {
 	if (printRules)
-		cout << "<Rat23S> ::= <Opt Function Definitions> # <Opt Declaration List> # <Statement List>\n";
+		cout << "\t<Rat23S> ::= <Opt Function Definitions> # <Opt Declaration List> # <Statement List>\n";
 
 	optFunctionDefinitions();
 	if (syntaxTokens[current_token_index].value == "eof") return;
@@ -64,20 +64,20 @@ void SyntaxAnalyzer::optFunctionDefinitions()
 	if (syntaxTokens[current_token_index].value == "function") {
 
 		if (printRules)
-			cout << "<Opt Function Definitions> -> <Function Definitions>\n";
+			cout << "\t<Opt Function Definitions> -> <Function Definitions>\n";
 
 		functionDefinitions();
 	}
 
 	if (printRules)
-		cout << "<Opt Function Definitions> -> E\n";
+		cout << "\t<Opt Function Definitions> -> E\n";
 }
 
 // R3. <Function Definitions> :: = <Function> < Function Definitions'>
 void SyntaxAnalyzer::functionDefinitions()
 {
 	if (printRules)
-		cout << "<Function Definitions> -> <Function> <Function Definitions'>\n";
+		cout << "\t<Function Definitions> -> <Function> <Function Definitions'>\n";
 
 	function();
 	functionDefinitionsPrime();
@@ -89,21 +89,21 @@ void SyntaxAnalyzer::functionDefinitionsPrime()
 	if (syntaxTokens[current_token_index].value == "function")
 	{
 		if (printRules)
-			cout << "<Function Definitions'> -> <Function> <Function Definitions'>\n";
+			cout << "\t<Function Definitions'> -> <Function> <Function Definitions'>\n";
 
 		function();
 		functionDefinitionsPrime();
 	}
 
 	if (printRules)
-		cout << "<Function Definitions'> -> E\n";
+		cout << "\t<Function Definitions'> -> E\n";
 }
 
 // R5 
 void SyntaxAnalyzer::function()
 {
 	if (printRules)
-		cout << "<Function> -> function <Identifier>(<Opt Parameter List>) < Opt Declaration List > <Body>\n";
+		cout << "\t<Function> -> function <Identifier>(<Opt Parameter List>) < Opt Declaration List > <Body>\n";
 
 	if (syntaxTokens[current_token_index].value == "function") outputTokenValueAndIterate();
 	else throwError("KEYWORD", "function");
@@ -128,20 +128,20 @@ void SyntaxAnalyzer::optParameterList()
 	if (syntaxTokens[current_token_index].type == "IDENTIFIER")
 	{
 		if (printRules)
-			cout << "<Opt Parameter List> -> <Parameter List>\n";
+			cout << "\t<Opt Parameter List> -> <Parameter List>\n";
 
 		parameterList();
 	}
 
 	if (printRules)
-		cout << "<Opt Parameter List> -> E\n";
+		cout << "\t<Opt Parameter List> -> E\n";
 }
 
 // R7
 void SyntaxAnalyzer::parameterList()
 {
 	if (printRules)
-		cout << "<Parameter List> -> <Parameter> <Parameter List'>\n";
+		cout << "\t<Parameter List> -> <Parameter> <Parameter List'>\n";
 
 	parameter();
 	parameterListPrime();
@@ -155,7 +155,7 @@ void SyntaxAnalyzer::parameterListPrime()
 		outputTokenValueAndIterate();
 
 		if (printRules)
-			cout << "<Parameter List'> -> , <Parameter> <Parameter List'>\n";
+			cout << "\t<Parameter List'> -> , <Parameter> <Parameter List'>\n";
 
 		parameter();
 		parameterListPrime();
@@ -163,14 +163,14 @@ void SyntaxAnalyzer::parameterListPrime()
 
 
 	if (printRules)
-		cout << "<Parameter List'> -> E\n";
+		cout << "\t<Parameter List'> -> E\n";
 }
 
 // R9
 void SyntaxAnalyzer::parameter()
 {
 	if (printRules)
-		cout << "<Parameter> -> <IDs> <Qualifier>\n";
+		cout << "\t<Parameter> -> <IDs> <Qualifier>\n";
 
 	ids();
 	qualifier();
@@ -184,21 +184,21 @@ void SyntaxAnalyzer::qualifier()
 		outputTokenValueAndIterate();
 
 		if (printRules)
-			cout << "<Qualifier> -> int\n";
+			cout << "\t<Qualifier> -> int\n";
 	}
 	else if (toUpper(syntaxTokens[current_token_index].value) == "Bool")
 	{
 		outputTokenValueAndIterate();
 
 		if (printRules)
-			cout << "<Qualifier> -> bool\n";
+			cout << "\t<Qualifier> -> bool\n";
 	}
 	else if (toUpper(syntaxTokens[current_token_index].value) == "Real")
 	{
 		outputTokenValueAndIterate();
 
 		if (printRules)
-			cout << "<Qualifier> -> real\n";
+			cout << "\t<Qualifier> -> real\n";
 	}
 	else throwError("REAL", "real");
 }
@@ -217,7 +217,7 @@ void SyntaxAnalyzer::body()
 			outputTokenValueAndIterate();
 
 			if (printRules)
-				cout << "<Body> -> { < Statement List> }\n";
+				cout << "\t<Body> -> { < Statement List> }\n";
 		}
 		else throwError("SEPARATOR", "}");
 	}
@@ -233,13 +233,13 @@ void SyntaxAnalyzer::optDeclarationList()
 		toUpper(syntaxTokens[current_token_index].value) == "Real")
 	{
 		if (printRules)
-			cout << "<Opt Declaration List> -> <Declaration List>\n";
+			cout << "\t<Opt Declaration List> -> <Declaration List>\n";
 
 		declarationList();
 	}
 	
 	if (printRules)
-		cout << "<Opt Declaration List> -> E\n";
+		cout << "\t<Opt Declaration List> -> E\n";
 }
 
 // R13
@@ -251,7 +251,7 @@ void SyntaxAnalyzer::declarationList()
 		outputTokenValueAndIterate();
 
 		if (printRules)
-			cout << "<Declaration List> -> <Declaration> ; <Declaration List'>\n";
+			cout << "\t<Declaration List> -> <Declaration> ; <Declaration List'>\n";
 
 		declarationListPrime();
 	}
@@ -272,7 +272,7 @@ void SyntaxAnalyzer::declarationListPrime()
 			outputTokenValueAndIterate();
 
 			if (printRules)
-				cout << "<Declaration List'> -> <Declaration> ; <Declaration List'>\n";
+				cout << "\t<Declaration List'> -> <Declaration> ; <Declaration List'>\n";
 
 			declarationListPrime();
 		}
@@ -280,14 +280,14 @@ void SyntaxAnalyzer::declarationListPrime()
 	}
 
 	if (printRules)
-		cout << "<Declaration List'> -> E\n";
+		cout << "\t<Declaration List'> -> E\n";
 }
 
 // R15
 void SyntaxAnalyzer::declaration()
 {
 	if (printRules)
-		cout << "<Declaration> -> <Qualifier> <IDs>\n";
+		cout << "\t<Declaration> -> <Qualifier> <IDs>\n";
 
 	qualifier();
 	ids();
@@ -301,7 +301,7 @@ void SyntaxAnalyzer::ids()
 		outputTokenValueAndIterate();
 
 		if (printRules)
-			cout << "<IDs> -> <Identifier> <IDs'>\n";
+			cout << "\t<IDs> -> <Identifier> <IDs'>\n";
 
 		idsPrime();
 	}
@@ -319,7 +319,7 @@ void SyntaxAnalyzer::idsPrime()
 			outputTokenValueAndIterate();
 
 			if (printRules)
-				cout << "<IDs'> ->  , <Identifier> <IDs'>\n";
+				cout << "\t<IDs'> ->  , <Identifier> <IDs'>\n";
 
 			idsPrime();
 		}
@@ -331,7 +331,7 @@ void SyntaxAnalyzer::idsPrime()
 void SyntaxAnalyzer::statementList()
 {
 	if (printRules)
-		cout << "<Statement List> -> <Statement> <Statement List'>\n";
+		cout << "\t<Statement List> -> <Statement> <Statement List'>\n";
 
 	statement();
 	statementListPrime();
@@ -345,14 +345,14 @@ void SyntaxAnalyzer::statementListPrime()
 		syntaxTokens[current_token_index].value == "{")
 	{
 		if (printRules)
-			cout << "<Statement List'> -> <Statement> <Statement List'>\n";
+			cout << "\t<Statement List'> -> <Statement> <Statement List'>\n";
 
 		statement();
 		statementListPrime();
 	}
 
 	if (printRules)
-		cout << "<Statement List'> -> E\n";
+		cout << "\t<Statement List'> -> E\n";
 }
 
 // R20
@@ -361,49 +361,49 @@ void SyntaxAnalyzer::statement()
 	if (syntaxTokens[current_token_index].value == "{")
 	{
 		if (printRules)
-			cout << "<Statement> -> <Compound>\n";
+			cout << "\t<Statement> -> <Compound>\n";
 
 		compound();
 	}
 	else if (syntaxTokens[current_token_index].type == "IDENTIFIER")
 	{
 		if (printRules)
-			cout << "<Statement> -> <Assign>\n";
+			cout << "\t<Statement> -> <Assign>\n";
 
 		assign();
 	}
 	else if (syntaxTokens[current_token_index].value == "if")
 	{
 		if (printRules)
-			cout << "<Statement> -> <If>\n";
+			cout << "\t<Statement> -> <If>\n";
 
 		ifRule();
 	}
 	else if (syntaxTokens[current_token_index].value == "return")
 	{
 		if (printRules)
-			cout << "<Statement> -> <Return>\n";
+			cout << "\t<Statement> -> <Return>\n";
 
 		returnRule();
 	}
 	else if (syntaxTokens[current_token_index].value == "put")
 	{
 		if (printRules)
-			cout << "<Statement> -> <Print>\n";
+			cout << "\t<Statement> -> <Print>\n";
 
 		print();
 	}
 	else if (syntaxTokens[current_token_index].value == "get")
 	{
 		if (printRules)
-			cout << "<Statement> -> <Scan>\n";
+			cout << "\t<Statement> -> <Scan>\n";
 
 		scan();
 	}
 	else if (syntaxTokens[current_token_index].value == "while")
 	{
 		if (printRules)
-			cout << "<Statement> -> <While>\n";
+			cout << "\t<Statement> -> <While>\n";
 
 		whileRule();
 	}
@@ -425,7 +425,7 @@ void SyntaxAnalyzer::compound()
 			outputTokenValueAndIterate();
 
 			if (printRules)
-				cout << "<Compound> -> { <Statement List> }\n";
+				cout << "\t<Compound> -> { <Statement List> }\n";
 		}
 		else throwError("SEPARATOR", "}");
 	}
@@ -438,6 +438,8 @@ void SyntaxAnalyzer::assign()
 {
 	if (syntaxTokens[current_token_index].type == "IDENTIFIER")
 	{
+		if (printRules)
+			cout << "\t<Assign> -> <Identifier> = <Expression> ;\n";
 		outputTokenValueAndIterate();
 
 
@@ -451,8 +453,6 @@ void SyntaxAnalyzer::assign()
 			{
 				outputTokenValueAndIterate();
 
-				if (printRules)
-					cout << "<Assign> -> <Identifier> = <Expression> ;\n";
 			}
 			else throwError("SEPARATOR", ";");
 		}
@@ -480,7 +480,7 @@ void SyntaxAnalyzer::ifRule()
 				outputTokenValueAndIterate();
 
 				if (printRules)
-					cout << "<If> -> if ( <Condition> ) <Statement> <If'>\n";
+					cout << "\t<If> -> if ( <Condition> ) <Statement> <If'>\n";
 
 				statement();
 
@@ -502,7 +502,7 @@ void SyntaxAnalyzer::ifRulePrime()
 		outputTokenValueAndIterate();
 
 		if (printRules)
-			cout << "<If'> -> fi\n";
+			cout << "\t<If'> -> fi\n";
 	}
 	else if (syntaxTokens[current_token_index].value == "else")
 	{
@@ -513,7 +513,7 @@ void SyntaxAnalyzer::ifRulePrime()
 			outputTokenValueAndIterate();
 
 			if (printRules)
-				cout << "<If'> -> else <Statement> fi\n";
+				cout << "\t<If'> -> else <Statement> fi\n";
 		}
 		else throwError("KEYWORD", "fi");
 	}
@@ -529,7 +529,7 @@ void SyntaxAnalyzer::returnRule()
 		outputTokenValueAndIterate();
 
 		if (printRules)
-			cout << "<Return> -> return <Return'>\n";
+			cout << "\t<Return> -> return <Return'>\n";
 
 		returnRulePrime();
 	}
@@ -544,7 +544,7 @@ void SyntaxAnalyzer::returnRulePrime()
 		outputTokenValueAndIterate();
 
 		if (printRules)
-			cout << "<Return'> -> ;\n";
+			cout << "\t<Return'> -> ;\n";
 	}
 	else
 	{
@@ -554,7 +554,7 @@ void SyntaxAnalyzer::returnRulePrime()
 			outputTokenValueAndIterate();
 
 			if (printRules)
-				cout << "<Return'> -> <Expression> ;\n";
+				cout << "\t<Return'> -> <Expression> ;\n";
 		}
 		else throwError("SEPARATOR", ";");
 	}
@@ -581,7 +581,7 @@ void SyntaxAnalyzer::print()
 					outputTokenValueAndIterate();
 
 					if (printRules)
-						cout << "<Print> -> put ( <Expression> );\n";
+						cout << "\t<Print> -> put ( <Expression> );\n";
 				}
 				else throwError("SEPARATOR", ";");
 			}
@@ -613,7 +613,7 @@ void SyntaxAnalyzer::scan()
 					outputTokenValueAndIterate();
 
 					if (printRules)
-						cout << "<Scan> -> get ( <IDs> );\n";
+						cout << "\t<Scan> -> get ( <IDs> );\n";
 				}
 				else throwError("SEPARATOR", ";");
 			}
@@ -649,7 +649,7 @@ void SyntaxAnalyzer::whileRule()
 					outputTokenValueAndIterate();
 
 					if (printRules)
-						cout << "<While> -> while ( <Condition> ) <Statement> endwhile\n";
+						cout << "\t<While> -> while ( <Condition> ) <Statement> endwhile\n";
 				}
 				else throwError("KEYWORD", "endwhile");
 			}
@@ -664,7 +664,7 @@ void SyntaxAnalyzer::whileRule()
 void SyntaxAnalyzer::condition()
 {
 	if (printRules)
-		cout << "<Condition> -> <Expression> <Relop> <Expression>\n";
+		cout << "\t<Condition> -> <Expression> <Relop> <Expression>\n";
 
 	expression();
 	relop();
@@ -678,42 +678,42 @@ void SyntaxAnalyzer::relop()
 		outputTokenValueAndIterate();
 
 		if (printRules)
-			cout << "<Relop> -> ==\n";
+			cout << "\t<Relop> -> ==\n";
 	}
 	else if (syntaxTokens[current_token_index].value == "!=")
 	{
 		outputTokenValueAndIterate();
 
 		if (printRules)
-			cout << "<Relop> -> !=\n";
+			cout << "\t<Relop> -> !=\n";
 	}
 	else if (syntaxTokens[current_token_index].value == ">")
 	{
 		outputTokenValueAndIterate();
 
 		if (printRules)
-			cout << "<Relop> -> >\n";
+			cout << "\t<Relop> -> >\n";
 	}
 	else if (syntaxTokens[current_token_index].value == "<")
 	{
 		outputTokenValueAndIterate();
 
 		if (printRules)
-			cout << "<Relop> -> <\n";
+			cout << "\t<Relop> -> <\n";
 	}
 	else if (syntaxTokens[current_token_index].value == "<=")
 	{
 		outputTokenValueAndIterate();
 
 		if (printRules)
-			cout << "<Relop> -> <=\n";
+			cout << "\t<Relop> -> <=\n";
 	}
 	else if (syntaxTokens[current_token_index].value == "=>")
 	{
 		outputTokenValueAndIterate();
 
 		if (printRules)
-			cout << "<Relop> -> =>\n";
+			cout << "\t<Relop> -> =>\n";
 	}
 	else throwError("OPERATOR", "=>");
 }
@@ -721,7 +721,7 @@ void SyntaxAnalyzer::relop()
 void SyntaxAnalyzer::expression()
 {
 	if (printRules)
-		cout << "<Expression> -> <Term> <Expression'>\n";
+		cout << "\t<Expression> -> <Term> <Expression'>\n";
 
 	term();
 	expressionPrime();
@@ -734,7 +734,7 @@ void SyntaxAnalyzer::expressionPrime()
 		outputTokenValueAndIterate();
 
 		if (printRules)
-			cout << "<Expression'> -> + <Term> <Expression'>\n";
+			cout << "\t<Expression'> -> + <Term> <Expression'>\n";
 
 		term();
 		expressionPrime();
@@ -744,21 +744,21 @@ void SyntaxAnalyzer::expressionPrime()
 		outputTokenValueAndIterate();
 
 		if (printRules)
-			cout << "<Expression'> -> - <Term> <Expression'>\n";
+			cout << "\t<Expression'> -> - <Term> <Expression'>\n";
 
 		term();
 		expressionPrime();
 	}
 
 	if (printRules)
-		cout << "<Expression'> -> E\n";
+		cout << "\t<Expression'> -> E\n";
 }
 
 void SyntaxAnalyzer::term()
 {
 
 	if (printRules)
-		cout << "<Term> -> <Factor> <Term'>\n";
+		cout << "\t<Term> -> <Factor> <Term'>\n";
 
 	factor();
 	termPrime();
@@ -771,7 +771,7 @@ void SyntaxAnalyzer::termPrime()
 		outputTokenValueAndIterate();
 
 		if (printRules)
-			cout << "<Term'> -> * <Factor> <Term'>\n";
+			cout << "\t<Term'> -> * <Factor> <Term'>\n";
 
 		factor();
 		termPrime();
@@ -781,14 +781,14 @@ void SyntaxAnalyzer::termPrime()
 		outputTokenValueAndIterate();
 
 		if (printRules)
-			cout << "<Term'> -> / <Factor> <Term'>\n";
+			cout << "\t<Term'> -> / <Factor> <Term'>\n";
 
 		factor();
 		termPrime();
 	}
 
 	if (printRules)
-		cout << "<Term'> -> E\n";
+		cout << "\t<Term'> -> E\n";
 }
 
 void SyntaxAnalyzer::factor()
@@ -798,14 +798,14 @@ void SyntaxAnalyzer::factor()
 		outputTokenValueAndIterate();
 
 		if (printRules)
-			cout << "<Factor> -> - <Primary>\n";
+			cout << "\t<Factor> -> - <Primary>\n";
 
 		primary();
 	}
 	else
 	{
 		if (printRules)
-			cout << "<Factor> -> <Primary>\n";
+			cout << "\t<Factor> -> <Primary>\n";
 
 		primary();
 	}
@@ -818,7 +818,7 @@ void SyntaxAnalyzer::primary() //++++++
 		outputTokenValueAndIterate();
 
 		if (printRules)
-			cout << "<Primary> -> <Identifier>\n";
+			cout << "\t<Primary> -> <Identifier>\n";
 
 		if (syntaxTokens[current_token_index].value == "(")
 		{
@@ -834,25 +834,14 @@ void SyntaxAnalyzer::primary() //++++++
 		outputTokenValueAndIterate();
 
 		if (printRules)
-			cout << "<Primary> -> <Integer>\n";
+			cout << "\t<Primary> -> <Integer>\n";
 	}
-	/*else if (syntaxTokens[current_token_index].type == "IDENTIFIER")
-	{
-		outputTokenValueAndIterate();
-		if (syntaxTokens[current_token_index].value == "(") outputTokenValueAndIterate();
-		else throwError();
-
-		ids();
-
-		if (syntaxTokens[current_token_index].value == ")") outputTokenValueAndIterate();
-		else throwError();
-	}*/
 	else if (syntaxTokens[current_token_index].value == "(")
 	{
 		outputTokenValueAndIterate();
 
 		if (printRules)
-			cout << "<Primary> -> <Expression>\n";
+			cout << "\t<Primary> -> <Expression>\n";
 
 		expression();
 
@@ -865,21 +854,21 @@ void SyntaxAnalyzer::primary() //++++++
 		outputTokenValueAndIterate();
 
 		if (printRules)
-			cout << "<Primary> -> <Real>\n";
+			cout << "\t<Primary> -> <Real>\n";
 	}
 	else if (syntaxTokens[current_token_index].value == "true")
 	{
 		outputTokenValueAndIterate();
 
 		if (printRules)
-			cout << "<Primary> -> <true>\n";
+			cout << "\t<Primary> -> <true>\n";
 	}
 	else if (syntaxTokens[current_token_index].value == "false")
 	{
 		outputTokenValueAndIterate();
 
 		if (printRules)
-			cout << "<Primary> -> <false>\n";
+			cout << "\t<Primary> -> <false>\n";
 	}
 	else throwError("KEYWORD", "false");
 }

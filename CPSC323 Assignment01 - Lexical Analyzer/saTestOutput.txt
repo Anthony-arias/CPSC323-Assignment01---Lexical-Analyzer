@@ -1,7 +1,8 @@
 TOKEN               LEXEME              
 
-KEYWORD             if                  
-SEPARATOR           (                   
 IDENTIFIER          a                   
-OPERATOR            >                   
+OPERATOR            =                   
 IDENTIFIER          b                   
+OPERATOR            +                   
+IDENTIFIER          c                   
+SEPARATOR           ;                   
