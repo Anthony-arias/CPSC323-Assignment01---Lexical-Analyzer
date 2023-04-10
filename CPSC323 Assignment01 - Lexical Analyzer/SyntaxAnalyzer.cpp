@@ -19,7 +19,7 @@ void SyntaxAnalyzer::outputTokenValueAndIterate()
 // Throw error if token value is incorrect
 void SyntaxAnalyzer::throwError(string expectedTokenType, string expectedToken) 
 {
-	std::string error_message = "Syntax Error: Invalid token type, Found token type '"
+	outputString = "Syntax Error: Invalid token type, Found token type '"
 		+ syntaxTokens[current_token_index].type
 		+ "' Expected token type '"
 		+ expectedTokenType
@@ -28,7 +28,7 @@ void SyntaxAnalyzer::throwError(string expectedTokenType, string expectedToken)
 		+ "' (Found Lexeme: '"
 		+ syntaxTokens[current_token_index].value
 		+ "')";
-	throw std::invalid_argument(error_message);
+	throw std::invalid_argument(outputString);
 }
 
 // Uppercase first letter used for int, bool, real
