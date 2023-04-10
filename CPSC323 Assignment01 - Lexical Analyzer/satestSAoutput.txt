@@ -9,15 +9,15 @@ Token: IDENTIFIER          Lexeme: b
 	<Expression> -> <Term> <Expression'>
 	<Term> -> <Factor> <Term'>
 	<Factor> -> <Primary>
-Token: OPERATOR            Lexeme: +
 	<Primary> -> <Identifier>
+Token: OPERATOR            Lexeme: +
 	<Term'> -> E
-Token: IDENTIFIER          Lexeme: c
 	<Expression'> -> + <Term> <Expression'>
+Token: IDENTIFIER          Lexeme: c
 	<Term> -> <Factor> <Term'>
 	<Factor> -> <Primary>
-Token: SEPARATOR           Lexeme: ;
 	<Primary> -> <Identifier>
+Token: SEPARATOR           Lexeme: ;
 	<Term'> -> E
 	<Expression'> -> E
 	<Expression'> -> E

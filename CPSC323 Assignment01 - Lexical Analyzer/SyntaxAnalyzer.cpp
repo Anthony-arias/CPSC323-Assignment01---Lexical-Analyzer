@@ -6,6 +6,7 @@
 void SyntaxAnalyzer::fileOpen(string input)
 {
 	file.open( input + "SAoutput.txt");
+	cout << "Output written to: " << input + "SAoutput.txt" << endl;
 }
 
 // Use when terminal value is correct and you want to output its token and value
@@ -23,14 +24,14 @@ void SyntaxAnalyzer::throwError(string expectedTokenType, string expectedToken)
 {
 	std::string error_message = "Syntax Error: Invalid token type, Found token type '"
 		+ syntaxTokens[current_token_index].type
-		+ "' Expected token type '"
+		+ "' \nExpected token type '"
 		+ expectedTokenType
-		+ "' Expected lexeme: '"
+		+ "' \nExpected lexeme: '"
 		+ expectedToken
-		+ "' (Found Lexeme: '"
+		+ "' \n(Found Lexeme: '"
 		+ syntaxTokens[current_token_index].value
 		+ "')";
-	throw std::invalid_argument(error_message);
+	throw (error_message);
 }
 
 // Uppercase first letter used for int, bool, real
@@ -45,28 +46,36 @@ string SyntaxAnalyzer::toUpper(std::string str) {
 // R1. <Rat23S> ::= <Opt Function Definitions> # <Opt Declaration List> # <Statement List>
 void SyntaxAnalyzer::rat23S()
 {
-	if (printRules)
-		//file << "\t<Rat23S> ::= <Opt Function Definitions> # <Opt Declaration List> # <Statement List>\n";
-		outputString = outputString + "\t<Rat23S> ::= <Opt Function Definitions> # <Opt Declaration List> # <Statement List>\n";
-
-	optFunctionDefinitions();
-	if (syntaxTokens[current_token_index].value == "eof") return;
-
-	if (syntaxTokens[current_token_index].value == "#")
+	try
 	{
-		outputTokenValueAndIterate();
-		optDeclarationList();
-		if (syntaxTokens[current_token_index].value == "#") outputTokenValueAndIterate();
-		else throwError("SEPARATOR", "#");
+		if (printRules)
+			outputString = outputString + "\t<Rat23S> ::= <Opt Function Definitions> # <Opt Declaration List> # <Statement List>\n";
+
+		optFunctionDefinitions();
+		if (syntaxTokens[current_token_index].value == "eof") return;
+
+		if (syntaxTokens[current_token_index].value == "#")
+		{
+			outputTokenValueAndIterate();
+			optDeclarationList();
+			if (syntaxTokens[current_token_index].value == "#") outputTokenValueAndIterate();
+			else throwError("SEPARATOR", "#");
+		}
+		if (syntaxTokens[current_token_index].value == "eof") return;
+
+		statementList();
+
+		if (syntaxTokens[current_token_index].value == "eof") return;
+		else throwError("EOF", "$");
+
+		file.close();
 	}
-	if (syntaxTokens[current_token_index].value == "eof") return;
-
-	statementList();
-
-	if (syntaxTokens[current_token_index].value == "eof") return;
-	else throwError("EOF", "$");
-
-	file.close();
+	catch (string error)
+	{
+		cout << "Error caught: see output file" << endl;
+		file << error << endl;
+		file.close();
+	}
 }
 
 // R2. <Opt Function Definitions> :: = <Function Definitions> | <Empty>
@@ -75,20 +84,19 @@ void SyntaxAnalyzer::optFunctionDefinitions()
 	if (syntaxTokens[current_token_index].value == "function") {
 
 		if (printRules)
-			//file << "\t<Opt Function Definitions> -> <Function Definitions>\n";
 			outputString = outputString + "\t<Opt Function Definitions> -> <Function Definitions>\n";
 
 		functionDefinitions();
 	}
 
-	if (printRules)//file << "\t<Opt Function Definitions> -> E\n"; 
+	if (printRules)
 		outputString = outputString + "\t<Opt Function Definitions> -> E\n";
 }
 
 // R3. <Function Definitions> :: = <Function> < Function Definitions'>
 void SyntaxAnalyzer::functionDefinitions()
 {
-	if (printRules) //file << "\t<Function Definitions> -> <Function> <Function Definitions'>\n";
+	if (printRules)
 		outputString = outputString + "\t<Function Definitions> -> <Function> <Function Definitions'>\n";
 
 	function();
@@ -114,7 +122,7 @@ void SyntaxAnalyzer::functionDefinitionsPrime()
 // R5 
 void SyntaxAnalyzer::function()
 {
-	if (printRules)//file << "\t<Function> -> function <Identifier>(<Opt Parameter List>) < Opt Declaration List > <Body>\n";
+	if (printRules)
 		outputString = outputString + "\t<Function> -> function <Identifier>(<Opt Parameter List>) < Opt Declaration List > <Body>\n";
 
 	if (syntaxTokens[current_token_index].value == "function") outputTokenValueAndIterate();
@@ -164,10 +172,9 @@ void SyntaxAnalyzer::parameterListPrime()
 {
 	if (syntaxTokens[current_token_index].value == ",")
 	{
-		outputTokenValueAndIterate();
-
 		if (printRules)//file << "\t<Parameter List'> -> , <Parameter> <Parameter List'>\n";
 			outputString = outputString + "\t<Parameter List'> -> , <Parameter> <Parameter List'>\n";
+		outputTokenValueAndIterate();
 
 		parameter();
 		parameterListPrime();
@@ -193,24 +200,22 @@ void SyntaxAnalyzer::qualifier()
 {
 	if (toUpper(syntaxTokens[current_token_index].value) == "Int")
 	{
-		outputTokenValueAndIterate();
-
 		if (printRules)//file << "\t<Qualifier> -> int\n";
 			outputString = outputString + "\t<Qualifier> -> int\n";
+		outputTokenValueAndIterate();
+
 	}
 	else if (toUpper(syntaxTokens[current_token_index].value) == "Bool")
 	{
-		outputTokenValueAndIterate();
-
 		if (printRules) //file << "\t<Qualifier> -> bool\n";
 			outputString = outputString + "\t<Qualifier> -> bool\n";
+		outputTokenValueAndIterate();
 	}
 	else if (toUpper(syntaxTokens[current_token_index].value) == "Real")
 	{
-		outputTokenValueAndIterate();
-
 		if (printRules) //file << "\t<Qualifier> -> real\n";
 			outputString = outputString + "\t<Qualifier> -> real\n";
+		outputTokenValueAndIterate();
 	}
 	else throwError("REAL", "real");
 }
@@ -220,6 +225,8 @@ void SyntaxAnalyzer::body()
 {
 	if (syntaxTokens[current_token_index].value == "{")
 	{
+		if (printRules)//file << "\t<Body> -> { < Statement List> }\n";
+			outputString = outputString + "\t<Body> -> { < Statement List> }\n";
 		outputTokenValueAndIterate();
 
 		statementList();
@@ -228,8 +235,6 @@ void SyntaxAnalyzer::body()
 		{
 			outputTokenValueAndIterate();
 
-			if (printRules)//file << "\t<Body> -> { < Statement List> }\n";
-				outputString = outputString + "\t<Body> -> { < Statement List> }\n";
 		}
 		else throwError("SEPARATOR", "}");
 	}
@@ -260,10 +265,9 @@ void SyntaxAnalyzer::declarationList()
 	declaration();
 	if (syntaxTokens[current_token_index].value == ";")
 	{
-		outputTokenValueAndIterate();
-
 		if (printRules)//file << "\t<Declaration List> -> <Declaration> ; <Declaration List'>\n";
 			outputString = outputString + "\t<Declaration List> -> <Declaration> ; <Declaration List'>\n";
+		outputTokenValueAndIterate();
 
 		declarationListPrime();
 	}
@@ -281,10 +285,9 @@ void SyntaxAnalyzer::declarationListPrime()
 		declaration();
 		if (syntaxTokens[current_token_index].value == ";")
 		{
-			outputTokenValueAndIterate();
-
 			if (printRules)//file << "\t<Declaration List'> -> <Declaration> ; <Declaration List'>\n";
 				outputString = outputString + "\t<Declaration List'> -> <Declaration> ; <Declaration List'>\n";
+			outputTokenValueAndIterate();
 
 			declarationListPrime();
 		}
@@ -310,10 +313,9 @@ void SyntaxAnalyzer::ids()
 {
 	if (syntaxTokens[current_token_index].type == "IDENTIFIER")
 	{
-		outputTokenValueAndIterate();
-
 		if (printRules) //file << "\t<IDs> -> <Identifier> <IDs'>\n";
 			outputString = outputString + "\t<IDs> -> <Identifier> <IDs'>\n";
+		outputTokenValueAndIterate();
 
 		idsPrime();
 	}
@@ -325,18 +327,21 @@ void SyntaxAnalyzer::idsPrime()
 {
 	if (syntaxTokens[current_token_index].value == ",")
 	{
+		if (printRules)//file << "\t<IDs'> ->  , <Identifier> <IDs'>\n";
+			outputString = outputString + "\t<IDs'> ->  , <Identifier> <IDs'>\n";
 		outputTokenValueAndIterate();
 		if (syntaxTokens[current_token_index].type == "IDENTIFIER")
 		{
 			outputTokenValueAndIterate();
 
-			if (printRules)//file << "\t<IDs'> ->  , <Identifier> <IDs'>\n";
-				outputString = outputString + "\t<IDs'> ->  , <Identifier> <IDs'>\n";
+			
 
 			idsPrime();
 		}
 		else throwError("IDENTIFIER", " ");
 	}
+	if (printRules)//file << "\t<IDs'> ->  , <Identifier> <IDs'>\n";
+		outputString = outputString + "\t<IDs'> ->  E\n";
 }
 
 // R18 
@@ -428,6 +433,9 @@ void SyntaxAnalyzer::compound()
 {
 	if (syntaxTokens[current_token_index].value == "{")
 	{
+		if (printRules)//file << "\t<Compound> -> { <Statement List> }\n";
+			outputString = outputString + "\t<Compound> -> { <Statement List> }\n";
+
 		outputTokenValueAndIterate();
 
 		statementList();
@@ -436,8 +444,6 @@ void SyntaxAnalyzer::compound()
 		{
 			outputTokenValueAndIterate();
 
-			if (printRules)//file << "\t<Compound> -> { <Statement List> }\n";
-				outputString = outputString + "\t<Compound> -> { <Statement List> }\n";
 		}
 		else throwError("SEPARATOR", "}");
 	}
@@ -479,6 +485,9 @@ void SyntaxAnalyzer::ifRule()
 {
 	if (syntaxTokens[current_token_index].value == "if")
 	{
+		if (printRules)//file << "\t<If> -> if ( <Condition> ) <Statement> <If'>\n";
+			outputString = outputString + "\t<If> -> if ( <Condition> ) <Statement> <If'>\n";
+
 		outputTokenValueAndIterate();
 
 		if (syntaxTokens[current_token_index].value == "(")
@@ -491,8 +500,7 @@ void SyntaxAnalyzer::ifRule()
 			{
 				outputTokenValueAndIterate();
 
-				if (printRules)//file << "\t<If> -> if ( <Condition> ) <Statement> <If'>\n";
-					outputString = outputString + "\t<If> -> if ( <Condition> ) <Statement> <If'>\n";
+				
 
 				statement();
 
@@ -511,21 +519,22 @@ void SyntaxAnalyzer::ifRulePrime()
 {
 	if (syntaxTokens[current_token_index].value == "fi")
 	{
-		outputTokenValueAndIterate();
-
 		if (printRules)//file << "\t<If'> -> fi\n";
 			outputString = outputString + "\t<If'> -> fi\n";
+		outputTokenValueAndIterate();
+
 	}
 	else if (syntaxTokens[current_token_index].value == "else")
 	{
+		if (printRules)//file << "\t<If'> -> else <Statement> fi\n";
+			outputString = outputString + "\t<If'> -> else <Statement> fi\n";
 		outputTokenValueAndIterate();
 		statement();
 		if (syntaxTokens[current_token_index].value == "fi")
 		{
 			outputTokenValueAndIterate();
 
-			if (printRules)//file << "\t<If'> -> else <Statement> fi\n";
-				outputString = outputString + "\t<If'> -> else <Statement> fi\n";
+			
 		}
 		else throwError("KEYWORD", "fi");
 	}
@@ -538,10 +547,9 @@ void SyntaxAnalyzer::returnRule()
 {
 	if (syntaxTokens[current_token_index].value == "return")
 	{
-		outputTokenValueAndIterate();
-
 		if (printRules)//file << "\t<Return> -> return <Return'>\n";
 			outputString = outputString + "\t<Return> -> return <Return'>\n";
+		outputTokenValueAndIterate();
 
 		returnRulePrime();
 	}
@@ -553,20 +561,20 @@ void SyntaxAnalyzer::returnRulePrime()
 {
 	if (syntaxTokens[current_token_index].value == ";")
 	{
-		outputTokenValueAndIterate();
-
 		if (printRules)//file << "\t<Return'> -> ;\n";
 			outputString = outputString + "\t<Return'> -> ;\n";
+		outputTokenValueAndIterate();
+
 	}
 	else
 	{
 		expression();
 		if (syntaxTokens[current_token_index].value == ";")
 		{
-			outputTokenValueAndIterate();
-
 			if (printRules)//file << "\t<Return'> -> <Expression> ;\n";
 				outputString = outputString + "\t<Return'> -> <Expression> ;\n";
+			outputTokenValueAndIterate();
+
 		}
 		else throwError("SEPARATOR", ";");
 	}
@@ -576,6 +584,8 @@ void SyntaxAnalyzer::print()
 {
 	if (syntaxTokens[current_token_index].value == "put")
 	{
+		if (printRules)//file << "\t<Print> -> put ( <Expression> );\n";
+			outputString = outputString + "\t<Print> -> put ( <Expression> );\n";
 		outputTokenValueAndIterate();
 
 		if (syntaxTokens[current_token_index].value == "(")
@@ -592,8 +602,7 @@ void SyntaxAnalyzer::print()
 				{
 					outputTokenValueAndIterate();
 
-					if (printRules)//file << "\t<Print> -> put ( <Expression> );\n";
-						outputString = outputString + "\t<Print> -> put ( <Expression> );\n";
+					
 				}
 				else throwError("SEPARATOR", ";");
 			}
@@ -608,6 +617,8 @@ void SyntaxAnalyzer::scan()
 {
 	if (syntaxTokens[current_token_index].value == "get")
 	{
+		if (printRules)//file << "\t<Scan> -> get ( <IDs> );\n";
+			outputString = outputString + "\t<Scan> -> get ( <IDs> );\n";
 		outputTokenValueAndIterate();
 
 		if (syntaxTokens[current_token_index].value == "(")
@@ -624,8 +635,7 @@ void SyntaxAnalyzer::scan()
 				{
 					outputTokenValueAndIterate();
 
-					if (printRules)//file << "\t<Scan> -> get ( <IDs> );\n";
-						outputString = outputString + "\t<Scan> -> get ( <IDs> );\n";
+					
 				}
 				else throwError("SEPARATOR", ";");
 			}
@@ -642,6 +652,8 @@ void SyntaxAnalyzer::whileRule()
 {
 	if (syntaxTokens[current_token_index].value == "while")
 	{
+		if (printRules)//file << "\t<While> -> while ( <Condition> ) <Statement> endwhile\n";
+			outputString = outputString + "\t<While> -> while ( <Condition> ) <Statement> endwhile\n";
 		outputTokenValueAndIterate();
 
 		if (syntaxTokens[current_token_index].value == "(")
@@ -660,8 +672,7 @@ void SyntaxAnalyzer::whileRule()
 				{
 					outputTokenValueAndIterate();
 
-					if (printRules)//file << "\t<While> -> while ( <Condition> ) <Statement> endwhile\n";
-						outputString = outputString + "\t<While> -> while ( <Condition> ) <Statement> endwhile\n";
+					
 				}
 				else throwError("KEYWORD", "endwhile");
 			}
@@ -687,45 +698,40 @@ void SyntaxAnalyzer::relop()
 {
 	if (syntaxTokens[current_token_index].value == "==")
 	{
-		outputTokenValueAndIterate();
-
 		if (printRules)//file << "\t<Relop> -> ==\n";
 			outputString = outputString + "\t<Relop> -> ==\n";
+		outputTokenValueAndIterate();
 	}
 	else if (syntaxTokens[current_token_index].value == "!=")
 	{
-		outputTokenValueAndIterate();
-
 		if (printRules)//file << "\t<Relop> -> !=\n";
 			outputString = outputString + "\t<Relop> -> !=\n";
+		outputTokenValueAndIterate();
+		
 	}
 	else if (syntaxTokens[current_token_index].value == ">")
 	{
-		outputTokenValueAndIterate();
-
 		if (printRules)//file << "\t<Relop> -> >\n";
 			outputString = outputString + "\t<Relop> -> >\n";
+		outputTokenValueAndIterate();
 	}
 	else if (syntaxTokens[current_token_index].value == "<")
 	{
-		outputTokenValueAndIterate();
-
 		if (printRules)//file << "\t<Relop> -> <\n";
 			outputString = outputString + "\t<Relop> -> <\n";
+		outputTokenValueAndIterate();
 	}
 	else if (syntaxTokens[current_token_index].value == "<=")
 	{
-		outputTokenValueAndIterate();
-
 		if (printRules)//file << "\t<Relop> -> <=\n";
 			outputString = outputString + "\t<Relop> -> <=\n";
+		outputTokenValueAndIterate();
 	}
 	else if (syntaxTokens[current_token_index].value == "=>")
 	{
-		outputTokenValueAndIterate();
-
 		if (printRules)//file << "\t<Relop> -> =>\n";
 			outputString = outputString + "\t<Relop> -> =>\n";
+		outputTokenValueAndIterate();
 	}
 	else throwError("OPERATOR", "=>");
 }
@@ -743,20 +749,20 @@ void SyntaxAnalyzer::expressionPrime()
 {
 	if (syntaxTokens[current_token_index].value == "+")
 	{
-		outputTokenValueAndIterate();
-
 		if (printRules)//file << "\t<Expression'> -> + <Term> <Expression'>\n";
 			outputString = outputString + "\t<Expression'> -> + <Term> <Expression'>\n";
+		outputTokenValueAndIterate();
+
 
 		term();
 		expressionPrime();
 	}
 	else if (syntaxTokens[current_token_index].value == "-")
 	{
-		outputTokenValueAndIterate();
-
 		if (printRules)//file << "\t<Expression'> -> - <Term> <Expression'>\n";
 			outputString = outputString + "\t<Expression'> -> - <Term> <Expression'>\n";
+		outputTokenValueAndIterate();
+
 
 		term();
 		expressionPrime();
@@ -780,20 +786,19 @@ void SyntaxAnalyzer::termPrime()
 {
 	if (syntaxTokens[current_token_index].value == "*")
 	{
-		outputTokenValueAndIterate();
-
 		if (printRules)//file << "\t<Term'> -> * <Factor> <Term'>\n";
 			outputString = outputString + "\t<Term'> -> * <Factor> <Term'>\n";
+		outputTokenValueAndIterate();
+
 
 		factor();
 		termPrime();
 	}
 	else if (syntaxTokens[current_token_index].value == "/")
 	{
-		outputTokenValueAndIterate();
-
 		if (printRules)//file << "\t<Term'> -> / <Factor> <Term'>\n";
 			outputString = outputString + "\t<Term'> -> / <Factor> <Term'>\n";
+		outputTokenValueAndIterate();
 
 		factor();
 		termPrime();
@@ -807,10 +812,9 @@ void SyntaxAnalyzer::factor()
 {
 	if (syntaxTokens[current_token_index].value == "-")
 	{
-		outputTokenValueAndIterate();
-
 		if (printRules)//file << "\t<Factor> -> - <Primary>\n";
 			outputString = outputString + "\t<Factor> -> - <Primary>\n";
+		outputTokenValueAndIterate();
 
 		primary();
 	}
@@ -827,10 +831,10 @@ void SyntaxAnalyzer::primary() //++++++
 {
 	if (syntaxTokens[current_token_index].type == "IDENTIFIER")
 	{
-		outputTokenValueAndIterate();
-
 		if (printRules)//file << "\t<Primary> -> <Identifier>\n";
 			outputString = outputString + "\t<Primary> -> <Identifier>\n";
+		outputTokenValueAndIterate();
+
 
 		if (syntaxTokens[current_token_index].value == "(")
 		{
@@ -843,17 +847,15 @@ void SyntaxAnalyzer::primary() //++++++
 	}
 	else if (syntaxTokens[current_token_index].type == "INTEGER")
 	{
-		outputTokenValueAndIterate();
-
 		if (printRules)//file << "\t<Primary> -> <Integer>\n";
 			outputString = outputString + "\t<Primary> -> <Integer>\n";
+		outputTokenValueAndIterate();
 	}
 	else if (syntaxTokens[current_token_index].value == "(")
 	{
-		outputTokenValueAndIterate();
-
 		if (printRules)//file << "\t<Primary> -> <Expression>\n";
 			outputString = outputString + "\t<Primary> -> <Expression>\n";
+		outputTokenValueAndIterate();
 
 		expression();
 
@@ -863,24 +865,21 @@ void SyntaxAnalyzer::primary() //++++++
 	}
 	else if (syntaxTokens[current_token_index].type == "REAL")
 	{
-		outputTokenValueAndIterate();
-
 		if (printRules)//file << "\t<Primary> -> <Real>\n";
 			outputString = outputString + "\t<Primary> -> <Real>\n";
+		outputTokenValueAndIterate();
 	}
 	else if (syntaxTokens[current_token_index].value == "true")
 	{
-		outputTokenValueAndIterate();
-
 		if (printRules)//file << "\t<Primary> -> <true>\n";
 			outputString = outputString + "\t<Primary> -> <true>\n";
+		outputTokenValueAndIterate();
 	}
 	else if (syntaxTokens[current_token_index].value == "false")
 	{
-		outputTokenValueAndIterate();
-
 		if (printRules)//file << "\t<Primary> -> <false>\n";
 			outputString = outputString + "\t<Primary> -> <false>\n";
+		outputTokenValueAndIterate();
 	}
 	else throwError("KEYWORD", "false");
 }

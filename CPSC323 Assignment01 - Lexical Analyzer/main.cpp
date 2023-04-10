@@ -66,8 +66,8 @@ int main(int argc, char* argv[]) {
     vector<Token> tokens = lexerAnalyzer.lexer(input);
 
     // Write the entire vector of tokens to the specified output file. (argv[2])
-    writeTokensToFile(tokens, userInput + "Output.txt");
-    cout << "Output written to: " << userInput + "Output.txt" << endl;
+    //writeTokensToFile(tokens, userInput + "Output.txt");
+    //cout << "Output written to: " << userInput + "Output.txt" << endl;
 
     // Testing Syntax Analyzer
     Token eof;
