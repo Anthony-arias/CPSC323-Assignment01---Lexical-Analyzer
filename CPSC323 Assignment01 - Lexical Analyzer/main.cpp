@@ -64,12 +64,23 @@ int main(int argc, char* argv[]) {
 
     // Add all the tokens the lexer function returns from reading the entire input file
     vector<Token> tokens = lexerAnalyzer.lexer(input);
-    syntaxAnalyzer.syntaxTokens = tokens;
 
     // Write the entire vector of tokens to the specified output file. (argv[2])
-    writeTokensToFile(tokens, userInput + "Output.txt");
-    cout << "Output written to: " << userInput + "Output.txt" << endl;
+    //writeTokensToFile(tokens, userInput + "Output.txt");
+    //cout << "Output written to: " << userInput + "Output.txt" << endl;
 
+    // Testing Syntax Analyzer
+    Token eof;
+    eof.type = "eof";
+    eof.value = "eof";
+
+    tokens.push_back(eof);
+
+    syntaxAnalyzer.syntaxTokens = tokens;
+
+    syntaxAnalyzer.fileOpen(userInput);
+    syntaxAnalyzer.rat23S();
+    
     cout << "Press Enter to terminate program" << endl;
     cin.ignore(999, '\n');
 
