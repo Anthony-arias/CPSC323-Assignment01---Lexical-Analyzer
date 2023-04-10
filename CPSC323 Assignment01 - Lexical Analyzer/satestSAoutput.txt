@@ -1,23 +1,23 @@
+Token: IDENTIFIER          Lexeme: a
 	<Rat23S> ::= <Opt Function Definitions> # <Opt Declaration List> # <Statement List>
 	<Opt Function Definitions> -> E
 	<Statement List> -> <Statement> <Statement List'>
 	<Statement> -> <Assign>
 	<Assign> -> <Identifier> = <Expression> ;
-Token: IDENTIFIER          Lexeme: a
 Token: OPERATOR            Lexeme: =
+Token: IDENTIFIER          Lexeme: b
 	<Expression> -> <Term> <Expression'>
 	<Term> -> <Factor> <Term'>
 	<Factor> -> <Primary>
-Token: IDENTIFIER          Lexeme: b
+Token: OPERATOR            Lexeme: +
 	<Primary> -> <Identifier>
 	<Term'> -> E
-Token: OPERATOR            Lexeme: +
+Token: IDENTIFIER          Lexeme: c
 	<Expression'> -> + <Term> <Expression'>
 	<Term> -> <Factor> <Term'>
 	<Factor> -> <Primary>
-Token: IDENTIFIER          Lexeme: c
+Token: SEPARATOR           Lexeme: ;
 	<Primary> -> <Identifier>
 	<Term'> -> E
 	<Expression'> -> E
 	<Expression'> -> E
-Token: SEPARATOR           Lexeme: ;

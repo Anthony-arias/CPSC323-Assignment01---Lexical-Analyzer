@@ -7,6 +7,7 @@ public:
 
     ofstream file;
     vector<Token> syntaxTokens;
+    string outputString;
 
     //helper functions
     void outputTokenValueAndIterate();

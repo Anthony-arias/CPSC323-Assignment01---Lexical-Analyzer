@@ -78,11 +78,9 @@ int main(int argc, char* argv[]) {
 
     syntaxAnalyzer.syntaxTokens = tokens;
 
-
     syntaxAnalyzer.fileOpen(userInput);
     syntaxAnalyzer.rat23S();
     
-
     cout << "Press Enter to terminate program" << endl;
     cin.ignore(999, '\n');
 
