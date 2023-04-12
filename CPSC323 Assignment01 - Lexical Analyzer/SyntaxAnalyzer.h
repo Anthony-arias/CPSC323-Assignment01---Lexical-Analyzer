@@ -5,50 +5,45 @@
 class SyntaxAnalyzer {
 public:
 
+    ofstream file;
     vector<Token> syntaxTokens;
+    string outputString;
+
     //helper functions
     void outputTokenValueAndIterate();
-    void throwError();
+    void throwError(string expectedTokenType, string expectedToken);
+    string toUpper(std::string str);
+    void fileOpen(string input);
 
     // Rule 1
     void rat23S();
     // Rule 2
     void optFunctionDefinitions();
-    void optDeclarationList();
-    void statementList();
-    // Rule 3 & 4
+    //void optDeclarationList();
+    //void statementList();
     void functionDefinitions();
     void function();
     void functionDefinitionsPrime();
-    // Rule 5
-    void identifier();
     void optParameterList();
-    void body();
-    // Rule 6
     void parameterList();
-    // Rule 7
-    void parameter();
     void parameterListPrime();
-    // Rule 9
-    void ids();
+    void parameter();
     void qualifier();
-    // Rule 12
+    void body();
+    void optDeclarationList();
     void declarationList();
-
-    //Rule 12-17
     void declarationListPrime();
     void declaration();
+    void ids();
     void idsPrime();
-
-    //Rule 18 <Statement  List>::= <Statement><Statement List'>
+    void statementList();
     void statementListPrime();
     void statement();
-
-    //Rule 20 <Statement> ::= <Compound> | <Assign> | <If> | <Return> | <Print> | <Scan> | <While>
     void compound();
     void assign();
-    void ifFunction();
-    void ifFunctionPrime();
+    void ifRule();
+    void ifRulePrime();
+   
 
     // Rule 25 - 37
     void returnRule();
@@ -65,11 +60,9 @@ public:
     void factor();
     void primary();
 private:
-
-    // Debug terminal hardcoded ON to output parse tree
-    bool terminal = true;
-
+    bool printRules = true;
     LexerAnalyzer lexer;
-    int current_token_index;
+    int current_token_index = 0;
+    
 };
 
