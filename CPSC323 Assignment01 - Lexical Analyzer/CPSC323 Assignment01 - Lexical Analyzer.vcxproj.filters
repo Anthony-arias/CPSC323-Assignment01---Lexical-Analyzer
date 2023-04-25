@@ -21,6 +21,7 @@
     <Text Include="saTest.txt" />
     <Text Include="saTest2.txt" />
     <Text Include="saTest3.txt" />
+    <Text Include="TextSAoutput.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LexerAnalyzer.cpp">
@@ -32,6 +33,9 @@
     <ClCompile Include="SyntaxAnalyzer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SymbolTable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Global_Includes.h">
@@ -41,6 +45,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SyntaxAnalyzer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SymbolTable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
