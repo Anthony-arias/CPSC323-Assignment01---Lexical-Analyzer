@@ -43,7 +43,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -145,15 +145,18 @@
     <Text Include="saTest2.txt" />
     <Text Include="saTest3.txt" />
     <Text Include="Text.txt" />
+    <Text Include="TextSAoutput.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LexerAnalyzer.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="SymbolTable.cpp" />
     <ClCompile Include="SyntaxAnalyzer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Global_Includes.h" />
     <ClInclude Include="LexerAnalyzer.h" />
+    <ClInclude Include="SymbolTable.h" />
     <ClInclude Include="SyntaxAnalyzer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
