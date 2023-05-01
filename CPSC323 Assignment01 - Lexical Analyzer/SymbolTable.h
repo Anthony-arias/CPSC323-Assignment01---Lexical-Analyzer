@@ -22,14 +22,16 @@ public:
     /* Returns the type of a given identifier */
     string getType(const string& identifier) const;
 
+    /* Updates the data type of an identifier */
+    void update(const string& identifier, const string& type);
 private:
     struct Entry {
-        int memoryAddress;
+        int memoryAddress = 5000;
         string type;
     };
 
     unordered_map<string, Entry> entries;
-    int memoryAddress;
+    int memoryAddress = 5000;
 };
 
 

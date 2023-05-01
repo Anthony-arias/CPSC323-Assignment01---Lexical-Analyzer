@@ -36,3 +36,12 @@ string SymbolTable::getType(const string& identifier) const {
     }
     return entries.at(identifier).type;
 }
+
+void SymbolTable::update(const string& identifier, const string& type) {
+    if (!contains(identifier)) {
+        cerr << "Error: identifier not found in symbol table\n";
+        return;
+    }
+    entries[identifier].type = type;
+}
+

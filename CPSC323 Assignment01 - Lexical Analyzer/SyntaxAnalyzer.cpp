@@ -1,7 +1,8 @@
 
 #include "SyntaxAnalyzer.h"
-#include <algorithm>
 
+
+string dataType = "";
 
 void SyntaxAnalyzer::fileOpen(string input)
 {
@@ -202,6 +203,8 @@ void SyntaxAnalyzer::qualifier()
 	{
 		if (printRules)//file << "\t<Qualifier> -> int\n";
 			outputString = outputString + "\t<Qualifier> -> int\n";
+
+		dataType = "INT";
 		outputTokenValueAndIterate();
 
 	}
@@ -209,12 +212,14 @@ void SyntaxAnalyzer::qualifier()
 	{
 		if (printRules) //file << "\t<Qualifier> -> bool\n";
 			outputString = outputString + "\t<Qualifier> -> bool\n";
+		dataType = "BOOL";
 		outputTokenValueAndIterate();
 	}
 	else if (toUpper(syntaxTokens[current_token_index].value) == "Real")
 	{
 		if (printRules) //file << "\t<Qualifier> -> real\n";
 			outputString = outputString + "\t<Qualifier> -> real\n";
+		dataType = "REAL";
 		outputTokenValueAndIterate();
 	}
 	else throwError("REAL", "real");
@@ -315,6 +320,8 @@ void SyntaxAnalyzer::ids()
 	{
 		if (printRules) //file << "\t<IDs> -> <Identifier> <IDs'>\n";
 			outputString = outputString + "\t<IDs> -> <Identifier> <IDs'>\n";
+
+		symTable.insert(syntaxTokens[current_token_index].value, dataType);
 		outputTokenValueAndIterate();
 
 		idsPrime();
@@ -329,12 +336,13 @@ void SyntaxAnalyzer::idsPrime()
 	{
 		if (printRules)//file << "\t<IDs'> ->  , <Identifier> <IDs'>\n";
 			outputString = outputString + "\t<IDs'> ->  , <Identifier> <IDs'>\n";
+
 		outputTokenValueAndIterate();
 		if (syntaxTokens[current_token_index].type == "IDENTIFIER")
 		{
-			outputTokenValueAndIterate();
 
-			
+			symTable.insert(syntaxTokens[current_token_index].value, dataType);
+			outputTokenValueAndIterate();
 
 			idsPrime();
 		}

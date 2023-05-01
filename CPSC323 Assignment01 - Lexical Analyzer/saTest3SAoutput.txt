@@ -1,0 +1,109 @@
+Token: SEPARATOR           Lexeme: #
+	<Rat23S> ::= <Opt Function Definitions> # <Opt Declaration List> # <Statement List>
+	<Opt Function Definitions> -> E
+Token: KEYWORD             Lexeme: int
+	<Opt Declaration List> -> <Declaration List>
+	<Declaration> -> <Qualifier> <IDs>
+	<Qualifier> -> int
+Token: IDENTIFIER          Lexeme: small
+	<IDs> -> <Identifier> <IDs'>
+Token: SEPARATOR           Lexeme: ,
+	<IDs'> ->  , <Identifier> <IDs'>
+Token: IDENTIFIER          Lexeme: big
+Token: SEPARATOR           Lexeme: ;
+	<IDs'> ->  E
+	<IDs'> ->  E
+	<Declaration List> -> <Declaration> ; <Declaration List'>
+Token: SEPARATOR           Lexeme: #
+	<Declaration List'> -> E
+	<Opt Declaration List> -> E
+Token: KEYWORD             Lexeme: if
+	<Statement List> -> <Statement> <Statement List'>
+	<Statement> -> <If>
+	<If> -> if ( <Condition> ) <Statement> <If'>
+Token: SEPARATOR           Lexeme: (
+Token: IDENTIFIER          Lexeme: big
+	<Condition> -> <Expression> <Relop> <Expression>
+	<Expression> -> <Term> <Expression'>
+	<Term> -> <Factor> <Term'>
+	<Factor> -> <Primary>
+	<Primary> -> <Identifier>
+Token: OPERATOR            Lexeme: >
+	<Term'> -> E
+	<Expression'> -> E
+	<Relop> -> >
+Token: IDENTIFIER          Lexeme: small
+	<Expression> -> <Term> <Expression'>
+	<Term> -> <Factor> <Term'>
+	<Factor> -> <Primary>
+	<Primary> -> <Identifier>
+Token: SEPARATOR           Lexeme: )
+	<Term'> -> E
+	<Expression'> -> E
+Token: SEPARATOR           Lexeme: {
+	<Statement> -> <Compound>
+	<Compound> -> { <Statement List> }
+Token: KEYWORD             Lexeme: return
+	<Statement List> -> <Statement> <Statement List'>
+	<Statement> -> <Return>
+	<Return> -> return <Return'>
+Token: IDENTIFIER          Lexeme: big
+	<Expression> -> <Term> <Expression'>
+	<Term> -> <Factor> <Term'>
+	<Factor> -> <Primary>
+	<Primary> -> <Identifier>
+Token: SEPARATOR           Lexeme: ;
+	<Term'> -> E
+	<Expression'> -> E
+	<Return'> -> <Expression> ;
+Token: SEPARATOR           Lexeme: }
+	<Statement List'> -> E
+Token: KEYWORD             Lexeme: else
+	<If'> -> else <Statement> fi
+Token: SEPARATOR           Lexeme: {
+	<Statement> -> <Compound>
+	<Compound> -> { <Statement List> }
+Token: KEYWORD             Lexeme: return
+	<Statement List> -> <Statement> <Statement List'>
+	<Statement> -> <Return>
+	<Return> -> return <Return'>
+Token: IDENTIFIER          Lexeme: small
+	<Expression> -> <Term> <Expression'>
+	<Term> -> <Factor> <Term'>
+	<Factor> -> <Primary>
+	<Primary> -> <Identifier>
+Token: SEPARATOR           Lexeme: ;
+	<Term'> -> E
+	<Expression'> -> E
+	<Return'> -> <Expression> ;
+Token: SEPARATOR           Lexeme: }
+	<Statement List'> -> E
+Token: KEYWORD             Lexeme: fi
+Token: KEYWORD             Lexeme: get
+	<Statement List'> -> <Statement> <Statement List'>
+	<Statement> -> <Scan>
+	<Scan> -> get ( <IDs> );
+Token: SEPARATOR           Lexeme: (
+Token: IDENTIFIER          Lexeme: small
+	<IDs> -> <Identifier> <IDs'>
+Token: SEPARATOR           Lexeme: ,
+	<IDs'> ->  , <Identifier> <IDs'>
+Token: IDENTIFIER          Lexeme: big
+Token: SEPARATOR           Lexeme: )
+	<IDs'> ->  E
+	<IDs'> ->  E
+Token: SEPARATOR           Lexeme: ;
+Token: KEYWORD             Lexeme: put
+	<Statement List'> -> <Statement> <Statement List'>
+	<Statement> -> <Print>
+	<Print> -> put ( <Expression> );
+Token: SEPARATOR           Lexeme: (
+Token: IDENTIFIER          Lexeme: big
+	<Expression> -> <Term> <Expression'>
+	<Term> -> <Factor> <Term'>
+	<Factor> -> <Primary>
+	<Primary> -> <Identifier>
+Token: SEPARATOR           Lexeme: )
+	<Term'> -> E
+	<Expression'> -> E
+Token: SEPARATOR           Lexeme: ;
