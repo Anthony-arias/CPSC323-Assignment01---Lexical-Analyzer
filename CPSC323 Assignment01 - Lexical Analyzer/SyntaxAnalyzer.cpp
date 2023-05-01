@@ -11,6 +11,36 @@ void SyntaxAnalyzer::fileOpen(string input)
 	cout << "Output written to: " << input + "SAoutput.txt" << endl;
 }
 
+void SyntaxAnalyzer::gen_instr(string op, string oprnd)
+{
+	if (instr_address < 1000) { // check if there is space in the array
+		Instr_table[instr_address][0] = to_string(instr_address + 1); // set the index as the label
+		Instr_table[instr_address][1] = op; // set the operation
+		Instr_table[instr_address][2] = oprnd; // set the operand
+		instr_address++; // increment the instruction address
+	}
+}
+
+int SyntaxAnalyzer::get_address(string token)
+{
+	if(symTable.contains(token))
+	{
+		return symTable.getAddress(token);
+	}
+	else
+	{
+		throw runtime_error("Error: Identifier " + token + " not found in symbol table.");
+
+	}
+}
+
+void SyntaxAnalyzer::print_Instr_table(string Instr_table[][3], int size) {
+	for (int i = 0; i < size; i++) {
+		cout << Instr_table[i][0] << "\t" << Instr_table[i][1] << "\t" << Instr_table[i][2] << endl;
+	}
+}
+
+
 // Use when terminal value is correct and you want to output its token and value
 // Also iterates the current token index
 void SyntaxAnalyzer::outputTokenValueAndIterate()
@@ -469,6 +499,7 @@ void SyntaxAnalyzer::assign()
 	{
 		if (printRules)//file << "\t<Assign> -> <Identifier> = <Expression> ;\n";
 			outputString = outputString + "\t<Assign> -> <Identifier> = <Expression> ;\n";
+		save = syntaxTokens[current_token_index].value;
 		outputTokenValueAndIterate();
 
 
@@ -477,6 +508,8 @@ void SyntaxAnalyzer::assign()
 			outputTokenValueAndIterate();
 
 			expression();
+
+			gen_instr("POPM", to_string(get_address(save)));
 
 			if (syntaxTokens[current_token_index].value == ";")
 			{
@@ -766,6 +799,7 @@ void SyntaxAnalyzer::expressionPrime()
 
 
 		term();
+		gen_instr("ADD", "nil");
 		expressionPrime();
 	}
 	else if (syntaxTokens[current_token_index].value == "-")
@@ -803,6 +837,7 @@ void SyntaxAnalyzer::termPrime()
 
 
 		factor();
+		gen_instr("MUL", "nil");
 		termPrime();
 	}
 	else if (syntaxTokens[current_token_index].value == "/")
@@ -845,6 +880,7 @@ void SyntaxAnalyzer::primary() //++++++
 		if (printRules)//file << "\t<Primary> -> <Identifier>\n";
 			outputString = outputString + "\t<Primary> -> <Identifier>\n";
 
+		gen_instr("PUSHM", to_string(get_address(syntaxTokens[current_token_index].value)));
 		outputTokenValueAndIterate();
 
 

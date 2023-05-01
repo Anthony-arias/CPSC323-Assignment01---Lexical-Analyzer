@@ -12,7 +12,7 @@ public:
     SymbolTable symTable;
 
     // 1st: instr address, 2nd: operator, 3rd: operand
-    string Instr_Table[1000][3];
+    string Instr_table[1000][3];
 
     // 0-17 instructions
     string instructions[18] = {
@@ -20,7 +20,7 @@ public:
     "LES", "EQU", "NEQ", "GEQ", "LEQ", "JMPZ", "JMP", "LABEL"
     };
 
-    int instrAddress = 1;
+    int instr_address = 0;
     string save;
 
 
@@ -29,6 +29,9 @@ public:
     void throwError(string expectedTokenType, string expectedToken);
     string toUpper(std::string str);
     void fileOpen(string input);
+    void gen_instr(string op, string oprnd);
+    int get_address(string token);
+    void print_Instr_table(string Instr_table[][3], int size);
 
     // Rule 1
     void rat23S();
@@ -73,7 +76,7 @@ public:
     void factor();
     void primary();
 private:
-    bool printRules = true;
+    bool printRules = false;
     LexerAnalyzer lexer;
     int current_token_index = 0;
     

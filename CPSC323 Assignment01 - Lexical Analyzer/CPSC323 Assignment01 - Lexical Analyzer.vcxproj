@@ -141,6 +141,7 @@
   <ItemGroup>
     <Text Include="output.txt" />
     <Text Include="Sample.txt" />
+    <Text Include="SampleSAoutput.txt" />
     <Text Include="saTest.txt" />
     <Text Include="saTest2.txt" />
     <Text Include="saTest3.txt" />

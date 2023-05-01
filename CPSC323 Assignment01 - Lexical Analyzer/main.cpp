@@ -82,6 +82,10 @@ int main(int argc, char* argv[]) {
     syntaxAnalyzer.rat23S();
 
     syntaxAnalyzer.symTable.print();
+
+    cout << '\n';
+
+    syntaxAnalyzer.print_Instr_table(syntaxAnalyzer.Instr_table, 10);
     
     cout << "Press Enter to terminate program" << endl;
     cin.ignore(999, '\n');

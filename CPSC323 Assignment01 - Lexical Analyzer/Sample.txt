@@ -1,5 +1,5 @@
-while  (fahr <= upper)   a = 23.00; endwhile  [* this is 
+#
+int a, b, c, x;
+#
 
-
-
-sample *]
+x = a + b*c;
