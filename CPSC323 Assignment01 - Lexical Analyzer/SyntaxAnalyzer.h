@@ -9,6 +9,8 @@ public:
     vector<Token> syntaxTokens;
     string outputString;
 
+    SymbolTable symTable;
+
     //helper functions
     void outputTokenValueAndIterate();
     void throwError(string expectedTokenType, string expectedToken);
@@ -19,8 +21,6 @@ public:
     void rat23S();
     // Rule 2
     void optFunctionDefinitions();
-    //void optDeclarationList();
-    //void statementList();
     void functionDefinitions();
     void function();
     void functionDefinitionsPrime();

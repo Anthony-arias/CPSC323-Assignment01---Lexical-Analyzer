@@ -1,28 +1,38 @@
 #include "SymbolTable.h"
 
-// Add an entry to the symbol table
-void SymbolTable::addEntry(const string& name, int address, const string& type) {
-    entries.push_back({ name, address, type });
+SymbolTable::SymbolTable() : memoryAddress(5000) {}
+
+bool SymbolTable::contains(const string& identifier) const {
+    return entries.find(identifier) != entries.end();
 }
 
-// Get the address of a variable
-int SymbolTable::getAddress(const string& name) const {
-    for (const auto& entry : entries) {
-        if (entry.name == name) {
-            return entry.address;
-        }
+void SymbolTable::insert(const string& identifier, const string& type) {
+    if (contains(identifier)) {
+        cerr << "Error: identifier already exists in symbol table\n";
+        return;
     }
-    // Handle error if name is not found
-    throw out_of_range("Name not found in symbol table");
+    entries[identifier] = { memoryAddress++, type };
 }
 
-// Get the data type of a variable
-string SymbolTable::getType(const string& name) const {
+void SymbolTable::print() const {
+    cout << "Identifier\tMemory Address\tType\n";
     for (const auto& entry : entries) {
-        if (entry.name == name) {
-            return entry.type;
-        }
+        cout << entry.first << "\t\t" << entry.second.memoryAddress << "\t\t" << entry.second.type << "\n";
     }
-    // Handle error if name is not found
-    throw out_of_range("Name not found in symbol table");
+}
+
+int SymbolTable::getAddress(const string& identifier) const {
+    if (!contains(identifier)) {
+        cerr << "Error: identifier not found in symbol table\n";
+        return -1;
+    }
+    return entries.at(identifier).memoryAddress;
+}
+
+string SymbolTable::getType(const string& identifier) const {
+    if (!contains(identifier)) {
+        cerr << "Error: identifier not found in symbol table\n";
+        return "";
+    }
+    return entries.at(identifier).type;
 }

@@ -833,6 +833,7 @@ void SyntaxAnalyzer::primary() //++++++
 	{
 		if (printRules)//file << "\t<Primary> -> <Identifier>\n";
 			outputString = outputString + "\t<Primary> -> <Identifier>\n";
+
 		outputTokenValueAndIterate();
 
 
