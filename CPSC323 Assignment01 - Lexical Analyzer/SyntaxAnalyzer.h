@@ -14,15 +14,9 @@ public:
     // 1st: instr address, 2nd: operator, 3rd: operand
     string Instr_table[1000][3];
 
-    // 0-17 instructions
-    string instructions[18] = {
-    "PUSHI", "PUSHM", "POPM", "OUT", "IN", "ADD", "SUB", "MUL", "DIV", "GRT",
-    "LES", "EQU", "NEQ", "GEQ", "LEQ", "JMPZ", "JMP", "LABEL"
-    };
-
+    vector<int> jump_stack;
     int instr_address = 0;
     string save;
-
 
     //helper functions
     void outputTokenValueAndIterate();
@@ -32,6 +26,9 @@ public:
     void gen_instr(string op, string oprnd);
     int get_address(string token);
     void print_Instr_table(string Instr_table[][3], int size);
+    void back_patch(int jump_addr);
+    int pop_jumpstack();
+    void push_jumpstack(int jump_addr);
 
     // Rule 1
     void rat23S();

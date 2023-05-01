@@ -3,6 +3,7 @@
 
 
 string dataType = "";
+string op;
 bool declarationSwitch = false;
 
 void SyntaxAnalyzer::fileOpen(string input)
@@ -23,22 +24,52 @@ void SyntaxAnalyzer::gen_instr(string op, string oprnd)
 
 int SyntaxAnalyzer::get_address(string token)
 {
-	if(symTable.contains(token))
-	{
-		return symTable.getAddress(token);
+	try {
+		// Try to parse the token as an integer
+		int value = stoi(token);
+		return value;
 	}
-	else
-	{
-		throw runtime_error("Error: Identifier " + token + " not found in symbol table.");
-
+	catch (invalid_argument& e) {
+		// If the token is not a valid integer, look it up in the symbol table
+		if (symTable.contains(token))
+		{
+			return symTable.getAddress(token);
+		}
+		else
+		{
+			throw runtime_error("Error: Identifier " + token + " not found in symbol table.");
+		}
 	}
 }
 
-void SyntaxAnalyzer::print_Instr_table(string Instr_table[][3], int size) {
-	for (int i = 0; i < size; i++) {
-		cout << Instr_table[i][0] << "\t" << Instr_table[i][1] << "\t" << Instr_table[i][2] << endl;
+
+int SyntaxAnalyzer::pop_jumpstack()
+{	
+	int addr = jump_stack.back();
+	jump_stack.pop_back();
+	return addr;
+}
+
+void SyntaxAnalyzer::push_jumpstack(int jump_addr)
+{
+	jump_stack.push_back(jump_addr);
+}
+
+
+void SyntaxAnalyzer::back_patch(int jump_addr)
+{
+	int addr = pop_jumpstack();
+	Instr_table[addr][2] = to_string(jump_addr);
+}
+
+// TODO:: Write this out to an output file
+void SyntaxAnalyzer::print_Instr_table(string instr_table[][3], int table_size) {
+	cout << "Address\tOp\tOprnd" << endl;
+	for (int i = 0; i < table_size; i++) {
+		cout << instr_table[i][0] << "\t" << instr_table[i][1] << "\t" << instr_table[i][2] << endl;
 	}
 }
+
 
 
 // Use when terminal value is correct and you want to output its token and value
@@ -698,6 +729,10 @@ void SyntaxAnalyzer::whileRule()
 	{
 		if (printRules)//file << "\t<While> -> while ( <Condition> ) <Statement> endwhile\n";
 			outputString = outputString + "\t<While> -> while ( <Condition> ) <Statement> endwhile\n";
+
+		int addr = instr_address + 1;
+		gen_instr("LABEL", "nil");
+
 		outputTokenValueAndIterate();
 
 		if (syntaxTokens[current_token_index].value == "(")
@@ -709,8 +744,11 @@ void SyntaxAnalyzer::whileRule()
 			if (syntaxTokens[current_token_index].value == ")")
 			{
 				outputTokenValueAndIterate();
-
+				
 				statement();
+
+				gen_instr("JMP", to_string(addr));
+				back_patch(instr_address + 1);
 
 				if (syntaxTokens[current_token_index].value == "endwhile")
 				{
@@ -736,6 +774,14 @@ void SyntaxAnalyzer::condition()
 	expression();
 	relop();
 	expression();
+
+	if (op == "<")
+	{
+		gen_instr("LES", "nil");
+		push_jumpstack(instr_address);
+		gen_instr("JMPZ", "nil");
+	}
+	// TODO:: FINISH ALL THE OTHER OPS
 }
 
 void SyntaxAnalyzer::relop()
@@ -744,12 +790,16 @@ void SyntaxAnalyzer::relop()
 	{
 		if (printRules)//file << "\t<Relop> -> ==\n";
 			outputString = outputString + "\t<Relop> -> ==\n";
+
+		op = syntaxTokens[current_token_index].value;
 		outputTokenValueAndIterate();
 	}
 	else if (syntaxTokens[current_token_index].value == "!=")
 	{
 		if (printRules)//file << "\t<Relop> -> !=\n";
 			outputString = outputString + "\t<Relop> -> !=\n";
+
+		op = syntaxTokens[current_token_index].value;
 		outputTokenValueAndIterate();
 		
 	}
@@ -757,24 +807,32 @@ void SyntaxAnalyzer::relop()
 	{
 		if (printRules)//file << "\t<Relop> -> >\n";
 			outputString = outputString + "\t<Relop> -> >\n";
+
+		op = syntaxTokens[current_token_index].value;
 		outputTokenValueAndIterate();
 	}
 	else if (syntaxTokens[current_token_index].value == "<")
 	{
 		if (printRules)//file << "\t<Relop> -> <\n";
 			outputString = outputString + "\t<Relop> -> <\n";
+	
+		op = syntaxTokens[current_token_index].value;
 		outputTokenValueAndIterate();
 	}
 	else if (syntaxTokens[current_token_index].value == "<=")
 	{
 		if (printRules)//file << "\t<Relop> -> <=\n";
 			outputString = outputString + "\t<Relop> -> <=\n";
+
+		op = syntaxTokens[current_token_index].value;
 		outputTokenValueAndIterate();
 	}
 	else if (syntaxTokens[current_token_index].value == "=>")
 	{
 		if (printRules)//file << "\t<Relop> -> =>\n";
 			outputString = outputString + "\t<Relop> -> =>\n";
+
+		op = syntaxTokens[current_token_index].value;
 		outputTokenValueAndIterate();
 	}
 	else throwError("OPERATOR", "=>");
@@ -897,6 +955,8 @@ void SyntaxAnalyzer::primary() //++++++
 	{
 		if (printRules)//file << "\t<Primary> -> <Integer>\n";
 			outputString = outputString + "\t<Primary> -> <Integer>\n";
+
+		gen_instr("PUSHI", to_string(get_address(syntaxTokens[current_token_index].value)));
 		outputTokenValueAndIterate();
 	}
 	else if (syntaxTokens[current_token_index].value == "(")
