@@ -3,6 +3,7 @@
 
 
 string dataType = "";
+bool declarationSwitch = false;
 
 void SyntaxAnalyzer::fileOpen(string input)
 {
@@ -57,13 +58,14 @@ void SyntaxAnalyzer::rat23S()
 
 		if (syntaxTokens[current_token_index].value == "#")
 		{
+			declarationSwitch = true;
 			outputTokenValueAndIterate();
 			optDeclarationList();
 			if (syntaxTokens[current_token_index].value == "#") outputTokenValueAndIterate();
 			else throwError("SEPARATOR", "#");
 		}
 		if (syntaxTokens[current_token_index].value == "eof") return;
-
+		declarationSwitch = false;
 		statementList();
 
 		if (syntaxTokens[current_token_index].value == "eof") return;
@@ -204,7 +206,7 @@ void SyntaxAnalyzer::qualifier()
 		if (printRules)//file << "\t<Qualifier> -> int\n";
 			outputString = outputString + "\t<Qualifier> -> int\n";
 
-		dataType = "INT";
+		dataType = "integer";
 		outputTokenValueAndIterate();
 
 	}
@@ -212,7 +214,7 @@ void SyntaxAnalyzer::qualifier()
 	{
 		if (printRules) //file << "\t<Qualifier> -> bool\n";
 			outputString = outputString + "\t<Qualifier> -> bool\n";
-		dataType = "BOOL";
+		dataType = "boolean";
 		outputTokenValueAndIterate();
 	}
 	else if (toUpper(syntaxTokens[current_token_index].value) == "Real")
@@ -321,7 +323,8 @@ void SyntaxAnalyzer::ids()
 		if (printRules) //file << "\t<IDs> -> <Identifier> <IDs'>\n";
 			outputString = outputString + "\t<IDs> -> <Identifier> <IDs'>\n";
 
-		symTable.insert(syntaxTokens[current_token_index].value, dataType);
+		if(declarationSwitch)
+			symTable.insert(syntaxTokens[current_token_index].value, dataType);
 		outputTokenValueAndIterate();
 
 		idsPrime();
@@ -340,8 +343,8 @@ void SyntaxAnalyzer::idsPrime()
 		outputTokenValueAndIterate();
 		if (syntaxTokens[current_token_index].type == "IDENTIFIER")
 		{
-
-			symTable.insert(syntaxTokens[current_token_index].value, dataType);
+			if (declarationSwitch)
+				symTable.insert(syntaxTokens[current_token_index].value, dataType);
 			outputTokenValueAndIterate();
 
 			idsPrime();

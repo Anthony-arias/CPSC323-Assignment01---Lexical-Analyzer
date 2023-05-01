@@ -11,6 +11,19 @@ public:
 
     SymbolTable symTable;
 
+    // 1st: instr address, 2nd: operator, 3rd: operand
+    string Instr_Table[1000][3];
+
+    // 0-17 instructions
+    string instructions[18] = {
+    "PUSHI", "PUSHM", "POPM", "OUT", "IN", "ADD", "SUB", "MUL", "DIV", "GRT",
+    "LES", "EQU", "NEQ", "GEQ", "LEQ", "JMPZ", "JMP", "LABEL"
+    };
+
+    int instrAddress = 1;
+    string save;
+
+
     //helper functions
     void outputTokenValueAndIterate();
     void throwError(string expectedTokenType, string expectedToken);
