@@ -3,7 +3,7 @@ i              5000           integer
 max            5001           integer   
 sum            5002           integer   
 
-Address       Op          Oprnd                                        
+Address       Op        Oprnd                                        
 1              PUSHI     0         
 2              POPM      5002      
 3              PUSHI     1         
