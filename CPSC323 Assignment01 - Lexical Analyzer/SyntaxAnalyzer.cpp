@@ -42,7 +42,6 @@ int SyntaxAnalyzer::get_address(string token)
 	}
 }
 
-
 int SyntaxAnalyzer::pop_jumpstack()
 {	
 	int addr = jump_stack.back();
@@ -69,8 +68,6 @@ void SyntaxAnalyzer::print_Instr_table(string instr_table[][3], int table_size) 
 		cout << instr_table[i][0] << "\t" << instr_table[i][1] << "\t" << instr_table[i][2] << endl;
 	}
 }
-
-
 
 // Use when terminal value is correct and you want to output its token and value
 // Also iterates the current token index
@@ -386,8 +383,9 @@ void SyntaxAnalyzer::ids()
 
 		if(declarationSwitch)
 			symTable.insert(syntaxTokens[current_token_index].value, dataType);
-		outputTokenValueAndIterate();
 
+		outputTokenValueAndIterate();
+		
 		idsPrime();
 	}
 	else throwError("IDENTIFIER", " ");
@@ -406,8 +404,9 @@ void SyntaxAnalyzer::idsPrime()
 		{
 			if (declarationSwitch)
 				symTable.insert(syntaxTokens[current_token_index].value, dataType);
-			outputTokenValueAndIterate();
 
+			outputTokenValueAndIterate();
+			
 			idsPrime();
 		}
 		else throwError("IDENTIFIER", " ");
@@ -503,19 +502,22 @@ void SyntaxAnalyzer::statement()
 // R21
 void SyntaxAnalyzer::compound()
 {
+	
 	if (syntaxTokens[current_token_index].value == "{")
 	{
 		if (printRules)//file << "\t<Compound> -> { <Statement List> }\n";
 			outputString = outputString + "\t<Compound> -> { <Statement List> }\n";
 
+		// Consume the opening curly brace
 		outputTokenValueAndIterate();
 
+		// Generate the instructions for the statement list
 		statementList();
 
 		if (syntaxTokens[current_token_index].value == "}")
 		{
+			// Consume the closing curly brace
 			outputTokenValueAndIterate();
-
 		}
 		else throwError("SEPARATOR", "}");
 	}
@@ -634,8 +636,6 @@ void SyntaxAnalyzer::ifRulePrime()
 	}
 }
 
-
-
 // 25
 void SyntaxAnalyzer::returnRule()
 {
@@ -680,6 +680,7 @@ void SyntaxAnalyzer::print()
 	{
 		if (printRules)//file << "\t<Print> -> put ( <Expression> );\n";
 			outputString = outputString + "\t<Print> -> put ( <Expression> );\n";
+		
 		outputTokenValueAndIterate();
 
 		if (syntaxTokens[current_token_index].value == "(")
@@ -687,6 +688,7 @@ void SyntaxAnalyzer::print()
 			outputTokenValueAndIterate();
 
 			expression();
+			gen_instr("OUT", "nil");
 
 			if (syntaxTokens[current_token_index].value == ")")
 			{
@@ -713,12 +715,14 @@ void SyntaxAnalyzer::scan()
 	{
 		if (printRules)//file << "\t<Scan> -> get ( <IDs> );\n";
 			outputString = outputString + "\t<Scan> -> get ( <IDs> );\n";
+
+		gen_instr("IN", "nil");
 		outputTokenValueAndIterate();
 
 		if (syntaxTokens[current_token_index].value == "(")
 		{
 			outputTokenValueAndIterate();
-
+			gen_instr("POPM", to_string(get_address(syntaxTokens[current_token_index].value)));
 			ids();
 
 			if (syntaxTokens[current_token_index].value == ")")
@@ -728,7 +732,6 @@ void SyntaxAnalyzer::scan()
 				if (syntaxTokens[current_token_index].value == ";")
 				{
 					outputTokenValueAndIterate();
-
 					
 				}
 				else throwError("SEPARATOR", ";");

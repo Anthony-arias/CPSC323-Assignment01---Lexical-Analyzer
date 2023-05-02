@@ -19,13 +19,6 @@ Token: OPERATOR            Lexeme: !=
 Token: IDENTIFIER          Lexeme: num2
 Token: SEPARATOR           Lexeme: )
 Token: SEPARATOR           Lexeme: {
-Token: KEYWORD             Lexeme: if
-Token: SEPARATOR           Lexeme: (
-Token: IDENTIFIER          Lexeme: num2
-Token: OPERATOR            Lexeme: !=
-Token: IDENTIFIER          Lexeme: num1
-Token: SEPARATOR           Lexeme: )
-Token: SEPARATOR           Lexeme: {
 Token: IDENTIFIER          Lexeme: num2
 Token: OPERATOR            Lexeme: =
 Token: IDENTIFIER          Lexeme: num1
@@ -39,10 +32,3 @@ Token: IDENTIFIER          Lexeme: num2
 Token: SEPARATOR           Lexeme: ;
 Token: SEPARATOR           Lexeme: }
 Token: KEYWORD             Lexeme: fi
-Token: SEPARATOR           Lexeme: }
-Token: KEYWORD             Lexeme: else
-Token: SEPARATOR           Lexeme: {
-Syntax Error: Invalid token type, Found token type 'SEPARATOR' 
-Expected token type 'KEYWORD' 
-Expected lexeme: 'while' 
-(Found Lexeme: '}')
