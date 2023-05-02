@@ -6,11 +6,39 @@ string dataType = "";
 string op;
 bool declarationSwitch = false;
 
+
 void SyntaxAnalyzer::fileOpen(string input)
 {
-	file.open( input + "SAoutput.txt");
-	cout << "Output written to: " << input + "SAoutput.txt" << endl;
+	//file.open( input + "SAoutput.txt");
+	//cout << "Output written to: " << input + "SAoutput.txt" << endl;
 }
+
+void SyntaxAnalyzer::writeTableToFile(string output_file) const {
+	ofstream out(output_file);
+	if (out.is_open()) {
+		out << left << setw(15) << "Identifier" << setw(15) << "Memory Address" << setw(10) << "Type" << endl;
+		for (const auto& entry : symTable.entries) {
+			out << left << setw(15) << entry.first << setw(15) << entry.second.memoryAddress << setw(10) << entry.second.type << endl;
+		}
+		out << left << setw(15) << "\nAddress" << setw(10) << "Op" << setw(10) << "Oprnd";
+		for (int i = 0; i <= instr_address; i++) {
+			out << left << setw(15) << Instr_table[i][0] << setw(10) << Instr_table[i][1] << setw(10) << Instr_table[i][2] << endl;
+		}
+
+	}
+	out.close();
+}
+
+void SyntaxAnalyzer::print_Instr_table(string instr_table[][3], int table_size)
+{
+	file << "Address\tOp\tOprnd" << endl;
+	for (int i = 0; i < table_size; i++)
+	{
+		file << instr_table[i][0] << "\t" << instr_table[i][1] << "\t" << instr_table[i][2] << endl;
+	}
+}
+
+
 
 void SyntaxAnalyzer::gen_instr(string op, string oprnd)
 {
@@ -59,14 +87,6 @@ void SyntaxAnalyzer::back_patch(int jump_addr)
 {
 	int addr = pop_jumpstack();
 	Instr_table[addr][2] = to_string(jump_addr);
-}
-
-// TODO:: Write this out to an output file
-void SyntaxAnalyzer::print_Instr_table(string instr_table[][3], int table_size) {
-	cout << "Address\tOp\tOprnd" << endl;
-	for (int i = 0; i < table_size; i++) {
-		cout << instr_table[i][0] << "\t" << instr_table[i][1] << "\t" << instr_table[i][2] << endl;
-	}
 }
 
 // Use when terminal value is correct and you want to output its token and value
@@ -688,7 +708,7 @@ void SyntaxAnalyzer::print()
 			outputTokenValueAndIterate();
 
 			expression();
-			gen_instr("OUT", "nil");
+			gen_instr("OUT", "");
 
 			if (syntaxTokens[current_token_index].value == ")")
 			{
@@ -716,7 +736,7 @@ void SyntaxAnalyzer::scan()
 		if (printRules)//file << "\t<Scan> -> get ( <IDs> );\n";
 			outputString = outputString + "\t<Scan> -> get ( <IDs> );\n";
 
-		gen_instr("IN", "nil");
+		gen_instr("IN", "");
 		outputTokenValueAndIterate();
 
 		if (syntaxTokens[current_token_index].value == "(")
@@ -753,7 +773,7 @@ void SyntaxAnalyzer::whileRule()
 			outputString = outputString + "\t<While> -> while ( <Condition> ) <Statement> endwhile\n";
 
 		int addr = instr_address;
-		gen_instr("LABEL", "nil");
+		gen_instr("LABEL", "");
 
 		outputTokenValueAndIterate();
 
@@ -799,37 +819,37 @@ void SyntaxAnalyzer::condition()
 
 	if (op == "<")
 	{
-		gen_instr("LES", "nil");
+		gen_instr("LES", "");
 		push_jumpstack(instr_address);
 		gen_instr("JMPZ", "nil");
 	}
 	else if (op == "==")
 	{
-		gen_instr("EQU", "nil");
+		gen_instr("EQU","");
 		push_jumpstack(instr_address);
 		gen_instr("JMPZ", "nil");
 	}
 	else if (op == "!=")
 	{
-		gen_instr("NEQ", "nil");
+		gen_instr("NEQ", "");
 		push_jumpstack(instr_address);
 		gen_instr("JMPZ", "nil");
 	}
 	else if (op == ">")
 	{
-		gen_instr("GRT", "nil");
+		gen_instr("GRT", "");
 		push_jumpstack(instr_address);
 		gen_instr("JMPZ", "nil");
 	}
 	else if (op == "<=")
 	{
-		gen_instr("LEQ", "nil");
+		gen_instr("LEQ", "");
 		push_jumpstack(instr_address);
 		gen_instr("JMPZ", "nil");
 	}
 	else if (op == "=>")
 	{
-		gen_instr("GEQ", "nil");
+		gen_instr("GEQ", "");
 		push_jumpstack(instr_address);
 		gen_instr("JMPZ", "nil");
 	}
@@ -912,7 +932,7 @@ void SyntaxAnalyzer::expressionPrime()
 
 
 		term();
-		gen_instr("ADD", "nil");
+		gen_instr("ADD", "");
 		expressionPrime();
 	}
 	else if (syntaxTokens[current_token_index].value == "-")
@@ -923,7 +943,7 @@ void SyntaxAnalyzer::expressionPrime()
 
 
 		term();
-		gen_instr("SUB", "nil");
+		gen_instr("SUB", "");
 		expressionPrime();
 	}
 
@@ -951,7 +971,7 @@ void SyntaxAnalyzer::termPrime()
 
 
 		factor();
-		gen_instr("MUL", "nil");
+		gen_instr("MUL", "");
 		termPrime();
 	}
 	else if (syntaxTokens[current_token_index].value == "/")
@@ -961,7 +981,7 @@ void SyntaxAnalyzer::termPrime()
 		outputTokenValueAndIterate();
 
 		factor();
-		gen_instr("DIV", "nil");
+		gen_instr("DIV", "");
 		termPrime();
 	}
 

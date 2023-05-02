@@ -1,67 +1,31 @@
-TOKEN               LEXEME              
+Identifier     Memory Address Type      
+i              5000           integer   
+max            5001           integer   
+sum            5002           integer   
 
-KEYWORD             function            
-IDENTIFIER          convert1x           
-SEPARATOR           (                   
-IDENTIFIER          fahr                
-KEYWORD             int                 
-SEPARATOR           )                   
-SEPARATOR           {                   
-KEYWORD             return              
-INTEGER             5                   
-OPERATOR            *                   
-SEPARATOR           (                   
-IDENTIFIER          fahr                
-OPERATOR            -                   
-INTEGER             32                  
-SEPARATOR           )                   
-OPERATOR            /                   
-INTEGER             9                   
-SEPARATOR           ;                   
-SEPARATOR           }                   
-SEPARATOR           #                   
-IDENTIFIER          Int                 
-IDENTIFIER          low                 
-SEPARATOR           ,                   
-IDENTIFIER          high                
-SEPARATOR           ,                   
-IDENTIFIER          step                
-SEPARATOR           ;                   
-SEPARATOR           #                   
-KEYWORD             get                 
-SEPARATOR           (                   
-IDENTIFIER          low                 
-SEPARATOR           ,                   
-IDENTIFIER          high                
-SEPARATOR           ,                   
-IDENTIFIER          step                
-SEPARATOR           )                   
-SEPARATOR           ;                   
-KEYWORD             while               
-SEPARATOR           (                   
-IDENTIFIER          low                 
-OPERATOR            <=                  
-IDENTIFIER          high                
-SEPARATOR           )                   
-SEPARATOR           {                   
-KEYWORD             put                 
-SEPARATOR           (                   
-IDENTIFIER          low                 
-SEPARATOR           )                   
-SEPARATOR           ;                   
-KEYWORD             put                 
-SEPARATOR           (                   
-IDENTIFIER          convert1x           
-SEPARATOR           (                   
-IDENTIFIER          low                 
-SEPARATOR           )                   
-SEPARATOR           )                   
-SEPARATOR           ;                   
-IDENTIFIER          low                 
-OPERATOR            =                   
-IDENTIFIER          low                 
-OPERATOR            +                   
-IDENTIFIER          step                
-SEPARATOR           ;                   
-SEPARATOR           }                   
-KEYWORD             endwhile            
+Address       Op          Oprnd                                        
+1              PUSHI     0         
+2              POPM      5002      
+3              PUSHI     1         
+4              POPM      5000      
+5              IN                  
+6              POPM      5001      
+7              LABEL               
+8              PUSHM     5000      
+9              PUSHM     5001      
+10             LES                 
+11             JMPZ      21        
+12             PUSHM     5002      
+13             PUSHM     5000      
+14             ADD                 
+15             POPM      5002      
+16             PUSHM     5000      
+17             PUSHI     1         
+18             ADD                 
+19             POPM      5000      
+20             JMP       7         
+21             PUSHM     5002      
+22             PUSHM     5001      
+23             ADD                 
+24             OUT                 
+                                   

@@ -1,0 +1,14 @@
+Identifier     Memory Address Type      
+a              5000           integer   
+b              5001           integer   
+c              5002           integer   
+x              5003           integer   
+
+Address       Op        Oprnd                                        
+1              PUSHM     5000      
+2              PUSHM     5001      
+3              PUSHM     5002      
+4              DIV                 
+5              SUB                 
+6              POPM      5003      
+                                   

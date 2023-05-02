@@ -146,11 +146,13 @@
     <Text Include="Sample3.txt" />
     <Text Include="Sample3SAoutput.txt" />
     <Text Include="Sample4.txt" />
+    <Text Include="SampleOutput.txt" />
     <Text Include="SampleSAoutput.txt" />
     <Text Include="saTest.txt" />
     <Text Include="saTest2.txt" />
     <Text Include="saTest3.txt" />
     <Text Include="Text.txt" />
+    <Text Include="TextOutput.txt" />
     <Text Include="TextSAoutput.txt" />
   </ItemGroup>
   <ItemGroup>

@@ -24,7 +24,9 @@ public:
 
     /* Updates the data type of an identifier */
     void update(const string& identifier, const string& type);
-private:
+
+
+//private:
     struct Entry {
         int memoryAddress = 5000;
         string type;

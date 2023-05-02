@@ -81,12 +81,13 @@ int main(int argc, char* argv[]) {
 
     syntaxAnalyzer.rat23S();
 
-    syntaxAnalyzer.symTable.print();
-
-    cout << '\n';
-
     syntaxAnalyzer.print_Instr_table(syntaxAnalyzer.Instr_table, syntaxAnalyzer.instr_address + 2);
-    
+
+    // Write the table to the output file
+    syntaxAnalyzer.writeTableToFile(userInput + "Output.txt");
+
+    cout << "Output written to: " << userInput + "Output.txt" << endl;
+
     cout << "Press Enter to terminate program" << endl;
     cin.ignore(999, '\n');
 

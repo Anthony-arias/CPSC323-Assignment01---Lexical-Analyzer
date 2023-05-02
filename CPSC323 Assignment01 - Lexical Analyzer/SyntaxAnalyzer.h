@@ -25,10 +25,11 @@ public:
     void fileOpen(string input);
     void gen_instr(string op, string oprnd);
     int get_address(string token);
-    void print_Instr_table(string Instr_table[][3], int size);
+    void print_Instr_table(string instr_table[][3], int table_size);
     void back_patch(int jump_addr);
     int pop_jumpstack();
     void push_jumpstack(int jump_addr);
+    void writeTableToFile(string output_file) const;
 
     // Rule 1
     void rat23S();
