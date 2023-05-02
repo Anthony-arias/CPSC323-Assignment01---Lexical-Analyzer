@@ -1,26 +1,24 @@
-function printNum (num int)
-{
-    put(num);
-}
 
 #
      INT     num,num1,num2;      [* declarations for each type *]
      BOOL    hello, world;
-     REAL    x,y,z;
 #
 
-get(num, num1, num2);
 
 if( num != num2)
 {
     if(num2 != num1)
     {
-        put (printNum (num2));
+       num2 = num1;
     }
     else
     {
-        put( printNum (num1));
+       num1 = num2;
     }
     fi
+}
+else
+{
+
 }
 fi

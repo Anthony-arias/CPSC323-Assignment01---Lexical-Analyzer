@@ -8,13 +8,13 @@ Token: SEPARATOR           Lexeme: #
 Token: KEYWORD             Lexeme: while
 Token: SEPARATOR           Lexeme: (
 Token: IDENTIFIER          Lexeme: i
-Token: OPERATOR            Lexeme: <
+Token: OPERATOR            Lexeme: =>
 Token: IDENTIFIER          Lexeme: max
 Token: SEPARATOR           Lexeme: )
 Token: IDENTIFIER          Lexeme: i
 Token: OPERATOR            Lexeme: =
 Token: IDENTIFIER          Lexeme: i
-Token: OPERATOR            Lexeme: +
-Token: INTEGER             Lexeme: 1
+Token: OPERATOR            Lexeme: -
+Token: INTEGER             Lexeme: 25
 Token: SEPARATOR           Lexeme: ;
 Token: KEYWORD             Lexeme: endwhile

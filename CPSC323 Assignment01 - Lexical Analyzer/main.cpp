@@ -85,7 +85,7 @@ int main(int argc, char* argv[]) {
 
     cout << '\n';
 
-    syntaxAnalyzer.print_Instr_table(syntaxAnalyzer.Instr_table, syntaxAnalyzer.instr_address);
+    syntaxAnalyzer.print_Instr_table(syntaxAnalyzer.Instr_table, syntaxAnalyzer.instr_address + 2);
     
     cout << "Press Enter to terminate program" << endl;
     cin.ignore(999, '\n');

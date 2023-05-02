@@ -15,7 +15,7 @@ void SyntaxAnalyzer::fileOpen(string input)
 void SyntaxAnalyzer::gen_instr(string op, string oprnd)
 {
 	if (instr_address < 1000) { // check if there is space in the array
-		Instr_table[instr_address][0] = to_string(instr_address + 1); // set the index as the label
+		Instr_table[instr_address][0] = to_string(instr_address); // set the index as the label
 		Instr_table[instr_address][1] = op; // set the operation
 		Instr_table[instr_address][2] = oprnd; // set the operand
 		instr_address++; // increment the instruction address
@@ -575,9 +575,9 @@ void SyntaxAnalyzer::ifRule()
 			{
 				outputTokenValueAndIterate();
 
-				
-
 				statement();
+
+				back_patch(instr_address);
 
 				ifRulePrime();
 			}
@@ -594,28 +594,47 @@ void SyntaxAnalyzer::ifRulePrime()
 {
 	if (syntaxTokens[current_token_index].value == "fi")
 	{
-		if (printRules)//file << "\t<If'> -> fi\n";
+		if (printRules) //file << "\t<If'> -> fi\n";
 			outputString = outputString + "\t<If'> -> fi\n";
 		outputTokenValueAndIterate();
 
+		// back-patch the jump instruction address
+		back_patch(instr_address);
 	}
 	else if (syntaxTokens[current_token_index].value == "else")
 	{
-		if (printRules)//file << "\t<If'> -> else <Statement> fi\n";
+		if (printRules) //file << "\t<If'> -> else <Statement> fi\n";
 			outputString = outputString + "\t<If'> -> else <Statement> fi\n";
 		outputTokenValueAndIterate();
+
+		// generate jump instruction
+		int jump_instr_address = instr_address; // save current instruction address
+		gen_instr("JMP", "nil"); // generate jump instruction with empty operand
+		push_jumpstack(jump_instr_address);
+
+		// parse statement after else keyword
 		statement();
+
+		// back-patch the jump instruction address
+		back_patch(instr_address);
+
+		// check for closing fi keyword
 		if (syntaxTokens[current_token_index].value == "fi")
 		{
 			outputTokenValueAndIterate();
-
-			
 		}
-		else throwError("KEYWORD", "fi");
+		else
+		{
+			throwError("KEYWORD", "fi");
+		}
 	}
-	else throwError("KEYWORD", "else");
-
+	else
+	{
+		throwError("KEYWORD", "else");
+	}
 }
+
+
 
 // 25
 void SyntaxAnalyzer::returnRule()
@@ -730,7 +749,7 @@ void SyntaxAnalyzer::whileRule()
 		if (printRules)//file << "\t<While> -> while ( <Condition> ) <Statement> endwhile\n";
 			outputString = outputString + "\t<While> -> while ( <Condition> ) <Statement> endwhile\n";
 
-		int addr = instr_address + 1;
+		int addr = instr_address;
 		gen_instr("LABEL", "nil");
 
 		outputTokenValueAndIterate();
@@ -748,7 +767,7 @@ void SyntaxAnalyzer::whileRule()
 				statement();
 
 				gen_instr("JMP", to_string(addr));
-				back_patch(instr_address + 1);
+				back_patch(instr_address);
 
 				if (syntaxTokens[current_token_index].value == "endwhile")
 				{
@@ -781,7 +800,40 @@ void SyntaxAnalyzer::condition()
 		push_jumpstack(instr_address);
 		gen_instr("JMPZ", "nil");
 	}
-	// TODO:: FINISH ALL THE OTHER OPS
+	else if (op == "==")
+	{
+		gen_instr("EQU", "nil");
+		push_jumpstack(instr_address);
+		gen_instr("JMPZ", "nil");
+	}
+	else if (op == "!=")
+	{
+		gen_instr("NEQ", "nil");
+		push_jumpstack(instr_address);
+		gen_instr("JMPZ", "nil");
+	}
+	else if (op == ">")
+	{
+		gen_instr("GRT", "nil");
+		push_jumpstack(instr_address);
+		gen_instr("JMPZ", "nil");
+	}
+	else if (op == "<=")
+	{
+		gen_instr("LEQ", "nil");
+		push_jumpstack(instr_address);
+		gen_instr("JMPZ", "nil");
+	}
+	else if (op == "=>")
+	{
+		gen_instr("GEQ", "nil");
+		push_jumpstack(instr_address);
+		gen_instr("JMPZ", "nil");
+	}
+	else
+	{
+		throwError("Expected a valid comparison operator", "(e.g. <, >, <= , => , == , != ) in <Relop>");
+	}
 }
 
 void SyntaxAnalyzer::relop()
@@ -868,6 +920,7 @@ void SyntaxAnalyzer::expressionPrime()
 
 
 		term();
+		gen_instr("SUB", "nil");
 		expressionPrime();
 	}
 
@@ -905,6 +958,7 @@ void SyntaxAnalyzer::termPrime()
 		outputTokenValueAndIterate();
 
 		factor();
+		gen_instr("DIV", "nil");
 		termPrime();
 	}
 

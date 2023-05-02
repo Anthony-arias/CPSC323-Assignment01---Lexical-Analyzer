@@ -1,5 +1,5 @@
 #
 int i, max;
 #
-while ( i < max) i = i + 1 ; 
+while ( i => max) i = i - 25 ; 
 endwhile

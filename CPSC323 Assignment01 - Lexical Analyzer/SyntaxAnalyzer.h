@@ -15,7 +15,7 @@ public:
     string Instr_table[1000][3];
 
     vector<int> jump_stack;
-    int instr_address = 0;
+    int instr_address = 1;
     string save;
 
     //helper functions

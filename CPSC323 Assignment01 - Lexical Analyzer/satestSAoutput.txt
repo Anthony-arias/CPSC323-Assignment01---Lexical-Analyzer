@@ -1,212 +1,48 @@
-Token: KEYWORD             Lexeme: function
-	<Rat23S> ::= <Opt Function Definitions> # <Opt Declaration List> # <Statement List>
-	<Opt Function Definitions> -> <Function Definitions>
-	<Function Definitions> -> <Function> <Function Definitions'>
-	<Function> -> function <Identifier>(<Opt Parameter List>) < Opt Declaration List > <Body>
-Token: IDENTIFIER          Lexeme: printNum
-Token: SEPARATOR           Lexeme: (
-Token: IDENTIFIER          Lexeme: num
-	<Opt Parameter List> -> <Parameter List>
-	<Parameter List> -> <Parameter> <Parameter List'>
-	<Parameter> -> <IDs> <Qualifier>
-	<IDs> -> <Identifier> <IDs'>
-Token: KEYWORD             Lexeme: int
-	<IDs'> ->  E
-	<Qualifier> -> int
-Token: SEPARATOR           Lexeme: )
-	<Parameter List'> -> E
-	<Opt Parameter List> -> E
-Token: SEPARATOR           Lexeme: {
-	<Opt Declaration List> -> E
-	<Body> -> { < Statement List> }
-Token: KEYWORD             Lexeme: put
-	<Statement List> -> <Statement> <Statement List'>
-	<Statement> -> <Print>
-	<Print> -> put ( <Expression> );
-Token: SEPARATOR           Lexeme: (
-Token: IDENTIFIER          Lexeme: num
-	<Expression> -> <Term> <Expression'>
-	<Term> -> <Factor> <Term'>
-	<Factor> -> <Primary>
-	<Primary> -> <Identifier>
-Token: SEPARATOR           Lexeme: )
-	<Term'> -> E
-	<Expression'> -> E
-Token: SEPARATOR           Lexeme: ;
-Token: SEPARATOR           Lexeme: }
-	<Statement List'> -> E
 Token: SEPARATOR           Lexeme: #
-	<Function Definitions'> -> E
-	<Opt Function Definitions> -> E
 Token: IDENTIFIER          Lexeme: INT
-	<Opt Declaration List> -> <Declaration List>
-	<Declaration> -> <Qualifier> <IDs>
-	<Qualifier> -> int
 Token: IDENTIFIER          Lexeme: num
-	<IDs> -> <Identifier> <IDs'>
 Token: SEPARATOR           Lexeme: ,
-	<IDs'> ->  , <Identifier> <IDs'>
 Token: IDENTIFIER          Lexeme: num1
 Token: SEPARATOR           Lexeme: ,
-	<IDs'> ->  , <Identifier> <IDs'>
 Token: IDENTIFIER          Lexeme: num2
 Token: SEPARATOR           Lexeme: ;
-	<IDs'> ->  E
-	<IDs'> ->  E
-	<IDs'> ->  E
-	<Declaration List> -> <Declaration> ; <Declaration List'>
 Token: IDENTIFIER          Lexeme: BOOL
-	<Declaration> -> <Qualifier> <IDs>
-	<Qualifier> -> bool
 Token: IDENTIFIER          Lexeme: hello
-	<IDs> -> <Identifier> <IDs'>
 Token: SEPARATOR           Lexeme: ,
-	<IDs'> ->  , <Identifier> <IDs'>
 Token: IDENTIFIER          Lexeme: world
 Token: SEPARATOR           Lexeme: ;
-	<IDs'> ->  E
-	<IDs'> ->  E
-	<Declaration List'> -> <Declaration> ; <Declaration List'>
-Token: IDENTIFIER          Lexeme: REAL
-	<Declaration> -> <Qualifier> <IDs>
-	<Qualifier> -> real
-Token: IDENTIFIER          Lexeme: x
-	<IDs> -> <Identifier> <IDs'>
-Token: SEPARATOR           Lexeme: ,
-	<IDs'> ->  , <Identifier> <IDs'>
-Token: IDENTIFIER          Lexeme: y
-Token: SEPARATOR           Lexeme: ,
-	<IDs'> ->  , <Identifier> <IDs'>
-Token: IDENTIFIER          Lexeme: z
-Token: SEPARATOR           Lexeme: ;
-	<IDs'> ->  E
-	<IDs'> ->  E
-	<IDs'> ->  E
-	<Declaration List'> -> <Declaration> ; <Declaration List'>
 Token: SEPARATOR           Lexeme: #
-	<Declaration List'> -> E
-	<Declaration List'> -> E
-	<Declaration List'> -> E
-	<Opt Declaration List> -> E
-Token: KEYWORD             Lexeme: get
-	<Statement List> -> <Statement> <Statement List'>
-	<Statement> -> <Scan>
-	<Scan> -> get ( <IDs> );
+Token: KEYWORD             Lexeme: if
 Token: SEPARATOR           Lexeme: (
 Token: IDENTIFIER          Lexeme: num
-	<IDs> -> <Identifier> <IDs'>
-Token: SEPARATOR           Lexeme: ,
-	<IDs'> ->  , <Identifier> <IDs'>
-Token: IDENTIFIER          Lexeme: num1
-Token: SEPARATOR           Lexeme: ,
-	<IDs'> ->  , <Identifier> <IDs'>
-Token: IDENTIFIER          Lexeme: num2
-Token: SEPARATOR           Lexeme: )
-	<IDs'> ->  E
-	<IDs'> ->  E
-	<IDs'> ->  E
-Token: SEPARATOR           Lexeme: ;
-Token: KEYWORD             Lexeme: if
-	<Statement List'> -> <Statement> <Statement List'>
-	<Statement> -> <If>
-	<If> -> if ( <Condition> ) <Statement> <If'>
-Token: SEPARATOR           Lexeme: (
-Token: IDENTIFIER          Lexeme: num
-	<Condition> -> <Expression> <Relop> <Expression>
-	<Expression> -> <Term> <Expression'>
-	<Term> -> <Factor> <Term'>
-	<Factor> -> <Primary>
-	<Primary> -> <Identifier>
 Token: OPERATOR            Lexeme: !=
-	<Term'> -> E
-	<Expression'> -> E
-	<Relop> -> !=
 Token: IDENTIFIER          Lexeme: num2
-	<Expression> -> <Term> <Expression'>
-	<Term> -> <Factor> <Term'>
-	<Factor> -> <Primary>
-	<Primary> -> <Identifier>
 Token: SEPARATOR           Lexeme: )
-	<Term'> -> E
-	<Expression'> -> E
 Token: SEPARATOR           Lexeme: {
-	<Statement> -> <Compound>
-	<Compound> -> { <Statement List> }
 Token: KEYWORD             Lexeme: if
-	<Statement List> -> <Statement> <Statement List'>
-	<Statement> -> <If>
-	<If> -> if ( <Condition> ) <Statement> <If'>
 Token: SEPARATOR           Lexeme: (
 Token: IDENTIFIER          Lexeme: num2
-	<Condition> -> <Expression> <Relop> <Expression>
-	<Expression> -> <Term> <Expression'>
-	<Term> -> <Factor> <Term'>
-	<Factor> -> <Primary>
-	<Primary> -> <Identifier>
 Token: OPERATOR            Lexeme: !=
-	<Term'> -> E
-	<Expression'> -> E
-	<Relop> -> !=
 Token: IDENTIFIER          Lexeme: num1
-	<Expression> -> <Term> <Expression'>
-	<Term> -> <Factor> <Term'>
-	<Factor> -> <Primary>
-	<Primary> -> <Identifier>
 Token: SEPARATOR           Lexeme: )
-	<Term'> -> E
-	<Expression'> -> E
 Token: SEPARATOR           Lexeme: {
-	<Statement> -> <Compound>
-	<Compound> -> { <Statement List> }
-Token: KEYWORD             Lexeme: put
-	<Statement List> -> <Statement> <Statement List'>
-	<Statement> -> <Print>
-	<Print> -> put ( <Expression> );
-Token: SEPARATOR           Lexeme: (
-Token: IDENTIFIER          Lexeme: printNum
-	<Expression> -> <Term> <Expression'>
-	<Term> -> <Factor> <Term'>
-	<Factor> -> <Primary>
-	<Primary> -> <Identifier>
-Token: SEPARATOR           Lexeme: (
 Token: IDENTIFIER          Lexeme: num2
-	<IDs> -> <Identifier> <IDs'>
-Token: SEPARATOR           Lexeme: )
-	<IDs'> ->  E
-Token: SEPARATOR           Lexeme: )
-	<Term'> -> E
-	<Expression'> -> E
+Token: OPERATOR            Lexeme: =
+Token: IDENTIFIER          Lexeme: num1
 Token: SEPARATOR           Lexeme: ;
 Token: SEPARATOR           Lexeme: }
-	<Statement List'> -> E
 Token: KEYWORD             Lexeme: else
-	<If'> -> else <Statement> fi
 Token: SEPARATOR           Lexeme: {
-	<Statement> -> <Compound>
-	<Compound> -> { <Statement List> }
-Token: KEYWORD             Lexeme: put
-	<Statement List> -> <Statement> <Statement List'>
-	<Statement> -> <Print>
-	<Print> -> put ( <Expression> );
-Token: SEPARATOR           Lexeme: (
-Token: IDENTIFIER          Lexeme: printNum
-	<Expression> -> <Term> <Expression'>
-	<Term> -> <Factor> <Term'>
-	<Factor> -> <Primary>
-	<Primary> -> <Identifier>
-Token: SEPARATOR           Lexeme: (
 Token: IDENTIFIER          Lexeme: num1
-	<IDs> -> <Identifier> <IDs'>
-Token: SEPARATOR           Lexeme: )
-	<IDs'> ->  E
-Token: SEPARATOR           Lexeme: )
-	<Term'> -> E
-	<Expression'> -> E
+Token: OPERATOR            Lexeme: =
+Token: IDENTIFIER          Lexeme: num2
 Token: SEPARATOR           Lexeme: ;
 Token: SEPARATOR           Lexeme: }
-	<Statement List'> -> E
 Token: KEYWORD             Lexeme: fi
 Token: SEPARATOR           Lexeme: }
-	<Statement List'> -> E
-Token: KEYWORD             Lexeme: fi
-	<If'> -> fi
+Token: KEYWORD             Lexeme: else
+Token: SEPARATOR           Lexeme: {
+Syntax Error: Invalid token type, Found token type 'SEPARATOR' 
+Expected token type 'KEYWORD' 
+Expected lexeme: 'while' 
+(Found Lexeme: '}')
