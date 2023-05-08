@@ -4,20 +4,36 @@
 class SymbolTable {
 public:
 
-    void addEntry(const string& name, int address, const string& type);
+    /* Constructor to initialize the memory address to 5000 */
+    SymbolTable();
 
-    // Get the address of a variable
-    int getAddress(const string& name) const;
+    /* Checks if an identifier exists in the symbol table */
+    bool contains(const string& identifier) const;
 
-    // Get the data type of a variable
-    string getType(const string& name) const;
+    /* Inserts a new identifier into the symbol table with its type */
+    void insert(const string& identifier, const string& type);
 
-private:
+    /* Prints out all identifiers in the symbol table with their memory addresses and types */
+    void print() const;
+
+    /* Returns the memory address of a given identifier */
+    int getAddress(const string& identifier) const;
+
+    /* Returns the type of a given identifier */
+    string getType(const string& identifier) const;
+
+    /* Updates the data type of an identifier */
+    void update(const string& identifier, const string& type);
+
+
+//private:
     struct Entry {
-        string name;
-        int address;
+        int memoryAddress = 5000;
         string type;
     };
-    vector<Entry> entries;
+
+    unordered_map<string, Entry> entries;
+    int memoryAddress = 5000;
 };
+
 

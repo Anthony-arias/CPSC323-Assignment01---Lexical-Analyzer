@@ -1,5 +1,6 @@
 #pragma once
 #include "Global_Includes.h"
+#include "SymbolTable.h"
 
 struct Token 
 {
@@ -13,6 +14,7 @@ public:
 
     vector<Token> lexer(string input);
 
+    //SymbolTable symTable;
 
 private:
 

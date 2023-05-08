@@ -1,190 +1,78 @@
-Token: KEYWORD             Lexeme: function
-	<Rat23S> ::= <Opt Function Definitions> # <Opt Declaration List> # <Statement List>
-	<Opt Function Definitions> -> <Function Definitions>
-	<Function Definitions> -> <Function> <Function Definitions'>
-	<Function> -> function <Identifier>(<Opt Parameter List>) < Opt Declaration List > <Body>
-Token: IDENTIFIER          Lexeme: convert1x
-Token: SEPARATOR           Lexeme: (
-Token: IDENTIFIER          Lexeme: fahr
-	<Opt Parameter List> -> <Parameter List>
-	<Parameter List> -> <Parameter> <Parameter List'>
-	<Parameter> -> <IDs> <Qualifier>
-	<IDs> -> <Identifier> <IDs'>
+Token: SEPARATOR           Lexeme: #
 Token: KEYWORD             Lexeme: int
-	<IDs'> ->  E
-	<Qualifier> -> int
-Token: SEPARATOR           Lexeme: )
-	<Parameter List'> -> E
-	<Opt Parameter List> -> E
-Token: SEPARATOR           Lexeme: {
-	<Opt Declaration List> -> E
-	<Body> -> { < Statement List> }
-Token: KEYWORD             Lexeme: return
-	<Statement List> -> <Statement> <Statement List'>
-	<Statement> -> <Return>
-	<Return> -> return <Return'>
-Token: INTEGER             Lexeme: 5
-	<Expression> -> <Term> <Expression'>
-	<Term> -> <Factor> <Term'>
-	<Factor> -> <Primary>
-	<Primary> -> <Integer>
-Token: OPERATOR            Lexeme: *
-	<Term'> -> * <Factor> <Term'>
-Token: SEPARATOR           Lexeme: (
-	<Factor> -> <Primary>
-	<Primary> -> <Expression>
-Token: IDENTIFIER          Lexeme: fahr
-	<Expression> -> <Term> <Expression'>
-	<Term> -> <Factor> <Term'>
-	<Factor> -> <Primary>
-	<Primary> -> <Identifier>
-Token: OPERATOR            Lexeme: -
-	<Term'> -> E
-	<Expression'> -> - <Term> <Expression'>
-Token: INTEGER             Lexeme: 32
-	<Term> -> <Factor> <Term'>
-	<Factor> -> <Primary>
-	<Primary> -> <Integer>
-Token: SEPARATOR           Lexeme: )
-	<Term'> -> E
-	<Expression'> -> E
-	<Expression'> -> E
-Token: OPERATOR            Lexeme: /
-	<Term'> -> / <Factor> <Term'>
-Token: INTEGER             Lexeme: 9
-	<Factor> -> <Primary>
-	<Primary> -> <Integer>
-Token: SEPARATOR           Lexeme: ;
-	<Term'> -> E
-	<Term'> -> E
-	<Term'> -> E
-	<Expression'> -> E
-	<Return'> -> <Expression> ;
-Token: SEPARATOR           Lexeme: }
-	<Statement List'> -> E
-Token: SEPARATOR           Lexeme: #
-	<Function Definitions'> -> E
-	<Opt Function Definitions> -> E
-Token: IDENTIFIER          Lexeme: Int
-	<Opt Declaration List> -> <Declaration List>
-	<Declaration> -> <Qualifier> <IDs>
-	<Qualifier> -> int
-Token: IDENTIFIER          Lexeme: low
-	<IDs> -> <Identifier> <IDs'>
+Token: IDENTIFIER          Lexeme: i
 Token: SEPARATOR           Lexeme: ,
-	<IDs'> ->  , <Identifier> <IDs'>
-Token: IDENTIFIER          Lexeme: high
+Token: IDENTIFIER          Lexeme: max
 Token: SEPARATOR           Lexeme: ,
-	<IDs'> ->  , <Identifier> <IDs'>
-Token: IDENTIFIER          Lexeme: step
+Token: IDENTIFIER          Lexeme: sum
 Token: SEPARATOR           Lexeme: ;
-	<IDs'> ->  E
-	<IDs'> ->  E
-	<IDs'> ->  E
-	<Declaration List> -> <Declaration> ; <Declaration List'>
 Token: SEPARATOR           Lexeme: #
-	<Declaration List'> -> E
-	<Opt Declaration List> -> E
+Token: IDENTIFIER          Lexeme: sum
+Token: OPERATOR            Lexeme: =
+Token: INTEGER             Lexeme: 0
+Token: SEPARATOR           Lexeme: ;
+Token: IDENTIFIER          Lexeme: i
+Token: OPERATOR            Lexeme: =
+Token: INTEGER             Lexeme: 1
+Token: SEPARATOR           Lexeme: ;
 Token: KEYWORD             Lexeme: get
-	<Statement List> -> <Statement> <Statement List'>
-	<Statement> -> <Scan>
-	<Scan> -> get ( <IDs> );
 Token: SEPARATOR           Lexeme: (
-Token: IDENTIFIER          Lexeme: low
-	<IDs> -> <Identifier> <IDs'>
-Token: SEPARATOR           Lexeme: ,
-	<IDs'> ->  , <Identifier> <IDs'>
-Token: IDENTIFIER          Lexeme: high
-Token: SEPARATOR           Lexeme: ,
-	<IDs'> ->  , <Identifier> <IDs'>
-Token: IDENTIFIER          Lexeme: step
+Token: IDENTIFIER          Lexeme: max
 Token: SEPARATOR           Lexeme: )
-	<IDs'> ->  E
-	<IDs'> ->  E
-	<IDs'> ->  E
 Token: SEPARATOR           Lexeme: ;
 Token: KEYWORD             Lexeme: while
-	<Statement List'> -> <Statement> <Statement List'>
-	<Statement> -> <While>
-	<While> -> while ( <Condition> ) <Statement> endwhile
 Token: SEPARATOR           Lexeme: (
-Token: IDENTIFIER          Lexeme: low
-	<Condition> -> <Expression> <Relop> <Expression>
-	<Expression> -> <Term> <Expression'>
-	<Term> -> <Factor> <Term'>
-	<Factor> -> <Primary>
-	<Primary> -> <Identifier>
-Token: OPERATOR            Lexeme: <=
-	<Term'> -> E
-	<Expression'> -> E
-	<Relop> -> <=
-Token: IDENTIFIER          Lexeme: high
-	<Expression> -> <Term> <Expression'>
-	<Term> -> <Factor> <Term'>
-	<Factor> -> <Primary>
-	<Primary> -> <Identifier>
+Token: IDENTIFIER          Lexeme: i
+Token: OPERATOR            Lexeme: <
+Token: IDENTIFIER          Lexeme: max
 Token: SEPARATOR           Lexeme: )
-	<Term'> -> E
-	<Expression'> -> E
 Token: SEPARATOR           Lexeme: {
-	<Statement> -> <Compound>
-	<Compound> -> { <Statement List> }
-Token: KEYWORD             Lexeme: put
-	<Statement List> -> <Statement> <Statement List'>
-	<Statement> -> <Print>
-	<Print> -> put ( <Expression> );
-Token: SEPARATOR           Lexeme: (
-Token: IDENTIFIER          Lexeme: low
-	<Expression> -> <Term> <Expression'>
-	<Term> -> <Factor> <Term'>
-	<Factor> -> <Primary>
-	<Primary> -> <Identifier>
-Token: SEPARATOR           Lexeme: )
-	<Term'> -> E
-	<Expression'> -> E
-Token: SEPARATOR           Lexeme: ;
-Token: KEYWORD             Lexeme: put
-	<Statement List'> -> <Statement> <Statement List'>
-	<Statement> -> <Print>
-	<Print> -> put ( <Expression> );
-Token: SEPARATOR           Lexeme: (
-Token: IDENTIFIER          Lexeme: convert1x
-	<Expression> -> <Term> <Expression'>
-	<Term> -> <Factor> <Term'>
-	<Factor> -> <Primary>
-	<Primary> -> <Identifier>
-Token: SEPARATOR           Lexeme: (
-Token: IDENTIFIER          Lexeme: low
-	<IDs> -> <Identifier> <IDs'>
-Token: SEPARATOR           Lexeme: )
-	<IDs'> ->  E
-Token: SEPARATOR           Lexeme: )
-	<Term'> -> E
-	<Expression'> -> E
-Token: SEPARATOR           Lexeme: ;
-Token: IDENTIFIER          Lexeme: low
-	<Statement List'> -> <Statement> <Statement List'>
-	<Statement> -> <Assign>
-	<Assign> -> <Identifier> = <Expression> ;
+Token: IDENTIFIER          Lexeme: sum
 Token: OPERATOR            Lexeme: =
-Token: IDENTIFIER          Lexeme: low
-	<Expression> -> <Term> <Expression'>
-	<Term> -> <Factor> <Term'>
-	<Factor> -> <Primary>
-	<Primary> -> <Identifier>
+Token: IDENTIFIER          Lexeme: sum
 Token: OPERATOR            Lexeme: +
-	<Term'> -> E
-	<Expression'> -> + <Term> <Expression'>
-Token: IDENTIFIER          Lexeme: step
-	<Term> -> <Factor> <Term'>
-	<Factor> -> <Primary>
-	<Primary> -> <Identifier>
+Token: IDENTIFIER          Lexeme: i
 Token: SEPARATOR           Lexeme: ;
-	<Term'> -> E
-	<Expression'> -> E
-	<Expression'> -> E
+Token: IDENTIFIER          Lexeme: i
+Token: OPERATOR            Lexeme: =
+Token: IDENTIFIER          Lexeme: i
+Token: OPERATOR            Lexeme: +
+Token: INTEGER             Lexeme: 1
+Token: SEPARATOR           Lexeme: ;
 Token: SEPARATOR           Lexeme: }
-	<Statement List'> -> E
-	<Statement List'> -> E
-	<Statement List'> -> E
 Token: KEYWORD             Lexeme: endwhile
+Token: KEYWORD             Lexeme: put
+Token: SEPARATOR           Lexeme: (
+Token: IDENTIFIER          Lexeme: sum
+Token: OPERATOR            Lexeme: +
+Token: IDENTIFIER          Lexeme: max
+Token: SEPARATOR           Lexeme: )
+Token: SEPARATOR           Lexeme: ;
+Address	Op	Oprnd
+		
+1	PUSHI	0
+2	POPM	5002
+3	PUSHI	1
+4	POPM	5000
+5	IN	
+6	POPM	5001
+7	LABEL	
+8	PUSHM	5000
+9	PUSHM	5001
+10	LES	
+11	JMPZ	21
+12	PUSHM	5002
+13	PUSHM	5000
+14	ADD	
+15	POPM	5002
+16	PUSHM	5000
+17	PUSHI	1
+18	ADD	
+19	POPM	5000
+20	JMP	7
+21	PUSHM	5002
+22	PUSHM	5001
+23	ADD	
+24	OUT	
+		
+		

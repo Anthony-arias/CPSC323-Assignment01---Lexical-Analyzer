@@ -104,6 +104,11 @@ Token LexerAnalyzer::checkStates(int state, Token token, string lexeme)
         }
         else {
             token.type = "IDENTIFIER";
+
+            // If the token is an identifier, insert it into the symbol table
+            if (token.type == "IDENTIFIER") {
+              //  symTable.insert(lexeme, token.value);
+            }
         }
     }
     token.value = lexeme;
@@ -237,6 +242,11 @@ vector<Token> LexerAnalyzer::lexer(string input) {
     if (find(accepting_states.begin(), accepting_states.end(), state) != accepting_states.end()) {
         // Create a token for the last lexeme
         token = checkStates(state, token, lexeme);
+
+        // If the token is an identifier, insert it into the symbol table
+        if (token.type == "IDENTIFIER") {
+           // symTable.insert(lexeme, token.value);
+        }
 
         // Add the token to the list of tokens
         tokens.push_back(token);

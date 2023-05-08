@@ -1,0 +1,17 @@
+Identifier     Memory Address Type      
+small          5000           integer   
+big            5001           integer   
+
+Address       Op        Oprnd                                        
+1              PUSHM     5001      
+2              PUSHM     5000      
+3              GRT                 
+4              JMPZ      6         
+5              PUSHM     5001      
+6              JMP       8         
+7              PUSHM     5000      
+8              IN                  
+9              POPM      5000      
+10             PUSHM     5001      
+11             OUT                 
+                                   

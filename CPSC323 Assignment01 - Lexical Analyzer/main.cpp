@@ -6,7 +6,6 @@
 LexerAnalyzer lexerAnalyzer;
 SyntaxAnalyzer syntaxAnalyzer;
 
-
 // Reads the contents of a file into a string and returns it
 string readFile(const string& fileName) {
 
@@ -79,8 +78,16 @@ int main(int argc, char* argv[]) {
     syntaxAnalyzer.syntaxTokens = tokens;
 
     syntaxAnalyzer.fileOpen(userInput);
+
     syntaxAnalyzer.rat23S();
-    
+
+    syntaxAnalyzer.print_Instr_table(syntaxAnalyzer.Instr_table, syntaxAnalyzer.instr_address + 2);
+
+    // Write the table to the output file
+    syntaxAnalyzer.writeTableToFile(userInput + "Output.txt");
+
+    cout << "Output written to: " << userInput + "Output.txt" << endl;
+
     cout << "Press Enter to terminate program" << endl;
     cin.ignore(999, '\n');
 

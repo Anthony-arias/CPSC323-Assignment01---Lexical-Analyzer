@@ -8,5 +8,8 @@
 #include <string>
 #include <fstream>
 #include <iomanip>
+#include <unordered_map>
+#include <algorithm>
+#include <stdexcept>
 
 using namespace std;

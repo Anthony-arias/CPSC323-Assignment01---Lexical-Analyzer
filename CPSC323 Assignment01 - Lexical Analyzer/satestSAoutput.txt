@@ -1,23 +1,34 @@
-Token: IDENTIFIER          Lexeme: a
-	<Rat23S> ::= <Opt Function Definitions> # <Opt Declaration List> # <Statement List>
-	<Opt Function Definitions> -> E
-	<Statement List> -> <Statement> <Statement List'>
-	<Statement> -> <Assign>
-	<Assign> -> <Identifier> = <Expression> ;
-Token: OPERATOR            Lexeme: =
-Token: IDENTIFIER          Lexeme: b
-	<Expression> -> <Term> <Expression'>
-	<Term> -> <Factor> <Term'>
-	<Factor> -> <Primary>
-	<Primary> -> <Identifier>
-Token: OPERATOR            Lexeme: +
-	<Term'> -> E
-	<Expression'> -> + <Term> <Expression'>
-Token: IDENTIFIER          Lexeme: c
-	<Term> -> <Factor> <Term'>
-	<Factor> -> <Primary>
-	<Primary> -> <Identifier>
+Token: SEPARATOR           Lexeme: #
+Token: IDENTIFIER          Lexeme: INT
+Token: IDENTIFIER          Lexeme: num
+Token: SEPARATOR           Lexeme: ,
+Token: IDENTIFIER          Lexeme: num1
+Token: SEPARATOR           Lexeme: ,
+Token: IDENTIFIER          Lexeme: num2
 Token: SEPARATOR           Lexeme: ;
-	<Term'> -> E
-	<Expression'> -> E
-	<Expression'> -> E
+Token: IDENTIFIER          Lexeme: BOOL
+Token: IDENTIFIER          Lexeme: hello
+Token: SEPARATOR           Lexeme: ,
+Token: IDENTIFIER          Lexeme: world
+Token: SEPARATOR           Lexeme: ;
+Token: SEPARATOR           Lexeme: #
+Token: KEYWORD             Lexeme: if
+Token: SEPARATOR           Lexeme: (
+Token: IDENTIFIER          Lexeme: num
+Token: OPERATOR            Lexeme: !=
+Token: IDENTIFIER          Lexeme: num2
+Token: SEPARATOR           Lexeme: )
+Token: SEPARATOR           Lexeme: {
+Token: IDENTIFIER          Lexeme: num2
+Token: OPERATOR            Lexeme: =
+Token: IDENTIFIER          Lexeme: num1
+Token: SEPARATOR           Lexeme: ;
+Token: SEPARATOR           Lexeme: }
+Token: KEYWORD             Lexeme: else
+Token: SEPARATOR           Lexeme: {
+Token: IDENTIFIER          Lexeme: num1
+Token: OPERATOR            Lexeme: =
+Token: IDENTIFIER          Lexeme: num2
+Token: SEPARATOR           Lexeme: ;
+Token: SEPARATOR           Lexeme: }
+Token: KEYWORD             Lexeme: fi
